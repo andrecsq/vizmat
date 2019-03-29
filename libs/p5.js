@@ -12556,7 +12556,7 @@ p5.prototype.cursor = function(type, x, y) {
   var cursor = 'auto';
   var canvas = this._curElement.elt;
   if (standardCursors.indexOf(type) > -1) {
-    // Standard css cursor
+    // Standard styles cursor
     cursor = type;
   } else if (typeof type === 'string') {
     var coords = '';
@@ -12573,7 +12573,7 @@ p5.prototype.cursor = function(type, x, y) {
       // Image file (relative path) - Separated for performance reasons
       cursor = 'url(' + type + ') ' + coords + ', auto';
     } else {
-      // Any valid string for the css cursor property
+      // Any valid string for the styles cursor property
       cursor = type;
     }
   }
@@ -33255,7 +33255,7 @@ p5.Matrix.prototype.scale = function() {
  * @param  {Number} a The angle of rotation in radians
  * @param  {p5.Vector|Array} axis  the axis(es) to rotate around
  * @return {p5.Matrix}                    this
- * inspired by Toji's gl-matrix lib, mat4 rotation
+ * inspired by Toji's gl-matrix libs, mat4 rotation
  */
 p5.Matrix.prototype.rotate = function(a, axis){
   var x, y, z, _a, len;

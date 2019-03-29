@@ -26975,7 +26975,7 @@ function (lang,   logger,   envOptimize,        file,           parse,
      */
     function cleanCssUrlQuotes(url) {
         //Make sure we are not ending in whitespace.
-        //Not very confident of the css regexps above that there will not be ending
+        //Not very confident of the styles regexps above that there will not be ending
         //whitespace.
         url = url.replace(/\s+$/, "");
 
@@ -27106,7 +27106,7 @@ function (lang,   logger,   envOptimize,        file,           parse,
                 importList.push(fullImportFileName);
                 return importContents;
             } catch (e) {
-                logger.warn(fileName + "\n  Cannot inline css import, skipping: " + importFileName);
+                logger.warn(fileName + "\n  Cannot inline styles import, skipping: " + importFileName);
                 return fullMatch;
             }
         });
@@ -30410,7 +30410,7 @@ function (args, quit, logger, build) {
         //Just run an app
 
         //Load the bundled libraries for use in the app.
-        if (commandOption === 'lib') {
+        if (commandOption === 'libs') {
             loadLib();
         }
 

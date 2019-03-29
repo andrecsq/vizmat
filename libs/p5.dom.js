@@ -1317,11 +1317,11 @@
   };
 
   /**
-   * Sets the given style (css) property (1st arg) of the element with the
+   * Sets the given style (styles) property (1st arg) of the element with the
    * given value (2nd arg). If a single argument is given, .style()
    * returns the value of the given property; however, if the single argument
-   * is given in css syntax ('text-align:center'), .style() sets the css
-   * appropriatly. .style() also handles 2d and 3d css transforms. If
+   * is given in styles syntax ('text-align:center'), .style() sets the styles
+   * appropriatly. .style() also handles 2d and 3d styles transforms. If
    * the 1st arg is 'rotate', 'translate', or 'position', the following arguments
    * accept Numbers as values. ('translate', 10, 100, 50);
    *
