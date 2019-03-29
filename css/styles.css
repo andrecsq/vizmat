@@ -1,0 +1,35 @@
+.gridele{
+    display: inline-block;
+    padding: 10px;
+    margin: auto;
+    width: 30%;
+    text-align: center;
+}
+.centertext{
+    text-align: center;
+
+}
+.select{
+    display: inline;
+    padding-left: 4px;
+}
+.gridparent{
+    margin: auto;
+    width: 80%;
+    border: 1px solid black;
+    padding: 10px;
+}
+.visualizagrid{
+    padding: 5px;
+    margin: auto;
+    width: 90%;
+    text-align: start;
+}
+.visublock{
+    display: inline-block;
+    height: 30%;
+    width: 100%;
+    margin: auto;
+    border: 1px solid black;
+
+}
