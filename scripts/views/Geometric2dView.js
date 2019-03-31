@@ -1,5 +1,6 @@
-class Geometric2dView{
+class Geometric2dView extends View{
     constructor(est, matrixName, size, quant, transpose, htmlContainer, grids){
+        super();
       this.est=est;
       this.transpose = transpose;
       this.center = {hor:(size.w/2),ver: (size.h/2)};
