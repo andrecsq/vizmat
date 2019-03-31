@@ -1,7 +1,7 @@
 class Geometric2dView{
     constructor(est, matrixName, size, quant, transpose, htmlContainer, grids){
       this.est=est;
-      this.tranpose = transpose;
+      this.transpose = transpose;
       this.center = {hor:(size.w/2),ver: (size.h/2)};
       this.matrixName = matrixName;
       this.quant = quant;
@@ -156,3 +156,5 @@ class Geometric2dView{
       return ang;
     }
   }
+
+define(()=>Geometric2dView);

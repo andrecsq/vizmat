@@ -27322,10 +27322,9 @@ function (lang,   logger,   envOptimize,        file,           parse,
          * Optimizes CSS files, inlining @import calls, stripping comments, and
          * optionally removes line returns.
          * @param {String} startDir the path to the top level directory
-         * @param {Object} config the config object with the optimizeCss and
          * cssImportIgnore options.
          */
-        css: function (startDir, config) {
+        css: function (startDir) {
             var buildText = "",
                 importList = [],
                 shouldRemove = config.dir && config.removeCombined,
@@ -28499,7 +28498,7 @@ define('build', function (require) {
             //things like text loader plugins loading CSS to get the optimized
             //CSS.
             if (config.optimizeCss && config.optimizeCss !== "none" && config.dir) {
-                buildFileContents += optimize.css(config.dir, config);
+                buildFileContents += optimize.css(config.dir);
             }
         }).then(function() {
             baseConfig = copyConfig(require.s.contexts._.config);

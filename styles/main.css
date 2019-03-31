@@ -1,0 +1,52 @@
+
+body{
+    margin: 0;
+    background-color: #ededed;
+}
+
+.logo{
+    height: 100%;
+}
+
+.main-header{
+    display: flex;
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    box-sizing: border-box;
+    padding: 7px;
+    background-color: rgba(255,255,255,0.6);
+    box-shadow: 0 0 5px rgba(0,0,0,0.12);
+    border: 1px solid #eee;
+}
+
+
+.main-container{
+    display: block;
+    box-sizing: border-box;
+    padding: 80px 20px 20px 20px ;
+    min-width: 900px;
+}
+
+.main-content{
+    display: grid;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    background-color: white;
+    padding: 20px;
+    grid-column-gap: 5px;
+    grid-row-gap: 15px;
+}
+
+.main-content>.vis-container{
+    border:1px solid #aaa;
+    border-radius: 4px;
+    min-height: 60px;
+}
+
+.main-content>.vis-container .config{
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+

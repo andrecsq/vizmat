@@ -1,8 +1,8 @@
 class FunctionView{
-  constructor(est, matrixName, size, htmlContainer, grids, zoom){    
+  constructor(est, matrixName, size, htmlContainer, grids, zoom){
     this.est=est;
     this.radius=10;
-    this.matrixName = matrixName;   
+    this.matrixName = matrixName;
     this.size = size;
     this.colors = [];
     this.onMatrixChange();
@@ -15,9 +15,9 @@ class FunctionView{
     this.step={x: (this.size.w-10)/this.matrixEst.shape[0]
                , y: (this.size.h-10)/(this.height+1) };
     
-    this.p5html = html`<div id="p5-${matrixName}" style="width: ${size.w}px; height: ${size.h}px;  display: inline-block; margin: 10px;"></div>`
+    this.p5html = $(`<div id="p5-${matrixName}" style="width: ${size.w}px; height: ${size.h}px;  display: inline-block; margin: 10px;"></div>`);
     this.createP5();
-    this.grids= grids
+    this.grids= grids;
     
     this.htmlContainer=htmlContainer;
     this.htmlContainer.append(this.p5html);
@@ -102,3 +102,5 @@ class FunctionView{
     return {x:(x - this.center.hor),y:(-y + this.center.ver)};
   }
 }
+
+define(()=>FunctionView);
