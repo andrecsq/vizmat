@@ -27,8 +27,8 @@ class GridConstructor{
                     </div>
                     <div class="content"></div>
                     <div class="spanButton">
-                        <span><i class="fas fa-angle-down"></i></span>
-                        <span><i class="fas fa-angle-up"></i></span>
+                        <span><i data-expand="down" class="fas fa-angle-down"></i></span>
+                        <span><i data-expand="up" class="fas fa-angle-up"></i></span>
                     </div>
                 </section>`;
     }
@@ -74,16 +74,25 @@ class GridConstructor{
     setEvents(cell,r,c){
         let _this=this;
         let viewChooser =cell.find(".chooseView");
+        let expandUp = cell.find("[data-expand=up]");
+        let expandDown = cell.find("[data-expand=down]");
+
+        expandUp.on("click",e=>{
+            _this.setRowspan(r,c,1);
+        });
+
+        expandDown.on("click",e=>{
+            _this.setRowspan(r,c,-1);
+        });
+
         viewChooser.on("change",e=>{
            let value = viewChooser.val();
            _this.loadViewObj(cell,value,r,c);
         });
     }
     setColspan(r,c,colspan){
-
         if(this.elements[0].length >= (c+colspan)){
             for(let i = r;i<this.elements.length;i++){
-                console.log(i,c);
                 let elmCell = this.elements[i][c];
                 if(elmCell[0]===r && elmCell[1]===c){
                     for(let j=c;j<this.elements[0].length;j++){
@@ -91,11 +100,25 @@ class GridConstructor{
                     }
                 }
             }
-            console.log(this.elements);
             this.rerrangeCells();
         }
-    }
-    setRowspan(r,c,colspan){
-
+    }etRowspan(r,c,rowspan){
+        let expand = rowspan>0;
+        rowspan = Math.min(Math.abs(rowspan),this.elements.length);
+        for(let j = c; j < this.elements[0].length; j++){
+            let elmCell = this.elements[r][j];
+            if(elmCell[0]===r && elmCell[1]===c){
+                if(expand) for(let i = r ; i < rowspan; i++){
+                    this.elements[i][j] = [r,c];
+                    console.log(i,j,this.elements[i][j])
+                }
+                else for(let i = rowspan-1 ; i >= r; i--){
+                    this.elements[i][j] = [i,j];
+                    console.log(i,j,this.elements[i][j])
+                }
+            }
+        }
+     //   console.log(this.elements);
+        this.rerrangeCells();
     }
 }
