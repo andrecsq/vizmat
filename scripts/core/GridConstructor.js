@@ -14,7 +14,7 @@ class GridConstructor{
         this.createGridCells(this.elements);
     }
 
-   loadCell(r, c){
+   loadCell(r, c, setExpand){
         let viewsNames="";
         for(let i in this.views) {
             viewsNames += `<option value="${i}">${i}</option>`;
@@ -26,9 +26,9 @@ class GridConstructor{
                         </select>
                     </div>
                     <div class="content"></div>
-                    <div class="spanButton">
-                        <span><i class="fas fa-angle-down"></i></span>
-                        <span><i class="fas fa-angle-up"></i></span>
+                    <div class="spanButton ${setExpand?"":"dnone"}">
+                        <span data-expand="down"><i class="fas fa-angle-down"></i></span>
+                        <span data-expand="up"><i class="fas fa-angle-up"></i></span>
                     </div>
                 </section>`;
     }
@@ -47,10 +47,13 @@ class GridConstructor{
                 if(elements[i][j][0] !== i || elements[i][j][1]!==j){
                     this.container.find(`#grid-${i}-${j}`).css({"display":"none"});
                 }
-                else if(create){
-                    let cell=$(this.loadCell(i,j));
-                    this.setEvents(cell,i,j);
-                    gridElements.push(cell);
+                else{
+                    this.container.find(`#grid-${i}-${j}`).css({"display":""});
+                    if(create){
+                        let cell=$(this.loadCell(i,j,i+1<elements.length));
+                        this.setEvents(cell,i,j);
+                        gridElements.push(cell);
+                    }
                 }
                 templateArea+=`r${elements[i][j][0]}-c${elements[i][j][1]} `;
             }
@@ -64,6 +67,8 @@ class GridConstructor{
 
         if(viewClassContainer.colspan!==undefined && viewClassContainer.colspan>1){
             this.setColspan(r,c,viewClassContainer.colspan);
+        }else{
+            this.clearColspan(r,c);
         }
 
         let viewObj = new(viewClassContainer.class)();
@@ -74,16 +79,24 @@ class GridConstructor{
     setEvents(cell,r,c){
         let _this=this;
         let viewChooser =cell.find(".chooseView");
+        let expandDown = cell.find("[data-expand=down]");
+        let expandUp = cell.find("[data-expand=up]");
         viewChooser.on("change",e=>{
            let value = viewChooser.val();
            _this.loadViewObj(cell,value,r,c);
         });
+        expandDown.on("click",e=>{
+            _this.setRowspan(r,c,"down");
+        });
+        expandUp.on("click",e=>{
+            _this.setRowspan(r,c,"up");
+        });
     }
-    setColspan(r,c,colspan){
 
+    setColspan(r,c,colspan){
+        this.clearColspan(r,c);
         if(this.elements[0].length >= (c+colspan)){
             for(let i = r;i<this.elements.length;i++){
-                console.log(i,c);
                 let elmCell = this.elements[i][c];
                 if(elmCell[0]===r && elmCell[1]===c){
                     for(let j=c;j<this.elements[0].length;j++){
@@ -91,11 +104,22 @@ class GridConstructor{
                     }
                 }
             }
-            console.log(this.elements);
             this.rerrangeCells();
+        }else{
+            Messages.error("Não é possível encaixar esta visualização aqui, tente na célula anterior",true)
         }
     }
-    setRowspan(r,c,colspan){
 
+    clearColspan(r,c){
+        let cols = this.elements[0].length;
+        for(let j=c;j<cols;j++){
+            this.elements[r][j] = [r,j];
+        }
+        console.log(this.elements);
+        this.rerrangeCells();
+    }
+
+    setRowspan(r,c,dir){
+        console.log(r,c,dir);
     }
 }
