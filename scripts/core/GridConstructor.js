@@ -14,7 +14,8 @@ class GridConstructor{
         this.createGridCells(this.elements);
     }
 
-   loadCell(r, c, setExpand){
+   loadCell(r, c){
+        let last= r==this.elements.length-1;
         let viewsNames="";
         for(let i in this.views) {
             viewsNames += `<option value="${i}">${i}</option>`;
@@ -26,18 +27,21 @@ class GridConstructor{
                         </select>
                     </div>
                     <div class="content"></div>
-                    <div class="spanButton ${setExpand?"":"dnone"}">
+                    <div class="spanButton ${(last?"hide":"")}">
                         <span data-expand="down"><i class="fas fa-angle-down"></i></span>
                         <span data-expand="up"><i class="fas fa-angle-up"></i></span>
                     </div>
                 </section>`;
     }
-    rerrangeCells(){
+    
+    rearrangeCells(){
         this.GridCells(this.elements,false);
     }
+
     createGridCells(){
         this.GridCells(this.elements, true);
     }
+
     GridCells(elements, create){
         let gridElements = [];
         let templateArea="";
@@ -47,12 +51,13 @@ class GridConstructor{
                 if(elements[i][j][0] !== i || elements[i][j][1]!==j){
                     this.container.find(`#grid-${i}-${j}`).css({"display":"none"});
                 }
-                else{
-                    this.container.find(`#grid-${i}-${j}`).css({"display":""});
+                else{ 
                     if(create){
-                        let cell=$(this.loadCell(i,j,i+1<elements.length));
+                        let cell=$(this.loadCell(i,j));
                         this.setEvents(cell,i,j);
                         gridElements.push(cell);
+                    }else{
+                        this.container.find(`#grid-${i}-${j}`).css({"display":""});
                     }
                 }
                 templateArea+=`r${elements[i][j][0]}-c${elements[i][j][1]} `;
@@ -62,13 +67,14 @@ class GridConstructor{
         this.container[0].style.gridTemplateAreas=templateArea;
         if(create)this.container.append(gridElements);
     }
+
     loadViewObj(cell,view,r,c){
         let viewClassContainer = this.views[view];
 
         if(viewClassContainer.colspan!==undefined && viewClassContainer.colspan>1){
             this.setColspan(r,c,viewClassContainer.colspan);
         }else{
-            this.clearColspan(r,c);
+            
         }
 
         let viewObj = new(viewClassContainer.class)();
@@ -76,25 +82,28 @@ class GridConstructor{
         viewObj._matrixes = this.matrixes;
         viewObj._matrixNames = cell[0];
     }
+
     setEvents(cell,r,c){
         let _this=this;
         let viewChooser =cell.find(".chooseView");
-        let expandDown = cell.find("[data-expand=down]");
         let expandUp = cell.find("[data-expand=up]");
+        let expandDown = cell.find("[data-expand=down]");
+
+        expandUp.on("click",e=>{
+            _this.setRowspan(r,c,-1);
+        });
+
+        expandDown.on("click",e=>{
+            _this.setRowspan(r,c,1);
+        });
+
         viewChooser.on("change",e=>{
            let value = viewChooser.val();
            _this.loadViewObj(cell,value,r,c);
         });
-        expandDown.on("click",e=>{
-            _this.setRowspan(r,c,"down");
-        });
-        expandUp.on("click",e=>{
-            _this.setRowspan(r,c,"up");
-        });
     }
 
     setColspan(r,c,colspan){
-        this.clearColspan(r,c);
         if(this.elements[0].length >= (c+colspan)){
             for(let i = r;i<this.elements.length;i++){
                 let elmCell = this.elements[i][c];
@@ -104,22 +113,20 @@ class GridConstructor{
                     }
                 }
             }
-            this.rerrangeCells();
-        }else{
-            Messages.error("Não é possível encaixar esta visualização aqui, tente na célula anterior",true)
+            this.rearrangeCells();
         }
     }
 
-    clearColspan(r,c){
-        let cols = this.elements[0].length;
-        for(let j=c;j<cols;j++){
-            this.elements[r][j] = [r,j];
+    setRowspan(r,c,rowspan){
+        if(rowspan!=0){
+            let up = rowspan<0, acol = c;
+            rowspan = Math.abs(rowspan);
+            while(acol < this.elements[0].length && this.elements[r][acol][0]===r && this.elements[r][acol][1]===c){
+                if(!up) for(let i = r; i <= (r+rowspan); i++)  this.elements[i][acol] = [r,c];
+                else for(let i = (r+rowspan); i > r ; i--) this.elements[i][acol] = [i,acol,1];
+                acol++;
+            }
+            this.rearrangeCells();
         }
-        console.log(this.elements);
-        this.rerrangeCells();
-    }
-
-    setRowspan(r,c,dir){
-        console.log(r,c,dir);
     }
 }
