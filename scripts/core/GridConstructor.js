@@ -71,12 +71,8 @@ class GridConstructor{
     loadViewObj(cell,view,r,c){
         let viewClassContainer = this.views[view];
 
-        if(viewClassContainer.colspan!==undefined && viewClassContainer.colspan>1){
-            this.setColspan(r,c,viewClassContainer.colspan);
-        }else{
-            
-        }
-
+        this.mergeColumns(r,c,viewClassContainer.colspan);
+        
         let viewObj = new(viewClassContainer.class)();
         viewObj._container = cell[0];
         viewObj._matrixes = this.matrixes;
@@ -90,11 +86,11 @@ class GridConstructor{
         let expandDown = cell.find("[data-expand=down]");
 
         expandUp.on("click",e=>{
-            _this.setRowspan(r,c,-1);
+            _this.mergeRows(r,c,-1);
         });
 
         expandDown.on("click",e=>{
-            _this.setRowspan(r,c,1);
+            _this.mergeRows(r,c,1);
         });
 
         viewChooser.on("change",e=>{
@@ -103,29 +99,45 @@ class GridConstructor{
         });
     }
 
-    setColspan(r,c,colspan){
-        if(this.elements[0].length >= (c+colspan)){
-            for(let i = r;i<this.elements.length;i++){
-                let elmCell = this.elements[i][c];
-                if(elmCell[0]===r && elmCell[1]===c){
-                    for(let j=c;j<this.elements[0].length;j++){
-                        this.elements[i][j] = [r,c];
-                    }
-                }
-            }
-            this.rearrangeCells();
-        }
+    isRowsMerged(elm,r,c){
+        return ( r+1 < elm.length    && elm[r+1][c][0]==elm[r][c][0] && elm[r+1][c][1]==elm[r][c][1])
+            || ( r-1 >= 0             && elm[r-1][c][0]==elm[r][c][0] && elm[r-1][c][1]==elm[r][c][1]);
     }
 
-    setRowspan(r,c,rowspan){
+    isColumnsMerged(elm,r,c){
+        return ( c+1 < elm.length    && elm[r][c+1][0]==elm[r][c][0] && elm[r][c+1][1]==elm[r][c][1])
+            || ( c-1 >= 0             && elm[r][c-1][0]==elm[r][c][0] && elm[r][c-1][1]==elm[r][c][1]);
+    }
+
+    mergeColumns(r,c,colspan){
+        colspan=colspan||0;
+
+    }
+
+    mergeRows(r,c,rowspan){
+        let elements = JSON.parse(JSON.stringify(this.elements));
         if(rowspan!=0){
-            let up = rowspan<0, acol = c;
+            let up = rowspan<0, acol = c, arow = r;
             rowspan = Math.abs(rowspan);
-            while(acol < this.elements[0].length && this.elements[r][acol][0]===r && this.elements[r][acol][1]===c){
-                if(!up) for(let i = r; i <= (r+rowspan); i++)  this.elements[i][acol] = [r,c];
-                else for(let i = (r+rowspan); i > r ; i--) this.elements[i][acol] = [i,acol,1];
+            for(let i=0; i < elements.length;i++){
+                arow = elements[i][acol][0]==r?i:arow;
+            }
+            while(acol < elements[0].length && elements[arow][acol][0]===r && elements[arow][acol][1]===c){
+                if(!up) for(let i = arow; i <= (arow+rowspan); i++) {
+                    if(!this.isColumnsMerged(elements,i,acol))
+                        elements[i][acol] = [r,c];
+                    else{
+                        Messages.error("Não pode sobrepor linha mesclada");
+                        break;
+                    }
+                }
+                else for(let i = arow; i > Math.max(r,arow-rowspan) ; i--){
+                    elements[i][acol] = [i,acol];
+                }
                 acol++;
             }
+
+            this.elements = elements;
             this.rearrangeCells();
         }
     }

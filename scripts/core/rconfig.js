@@ -62,7 +62,7 @@ async function mainLoad(M,views,fn){
     }
 
     let container = $(".main-content");
-    let grid = new GridConstructor(2,3,container,_views,_formulas,_matrixes);
+    let grid = new GridConstructor(3,3,container,_views,_formulas,_matrixes);
 
 }
 
