@@ -110,25 +110,51 @@ class GridConstructor{
     }
 
     mergeColumns(r,c,colspan){
-        colspan=colspan||0;
+        colspan = colspan===undefined?0:colspan;
+        if(colspan>=0){
+            let elements = JSON.parse(JSON.stringify(this.elements));
+            let tam=0,left,acol = c, arow = r;
 
+            for(let i=0; i < elements.length;i++){
+                if(elements[arow][i][1]===c){
+                    acol=i; tam++;
+                }
+            }
+            left = colspan<tam;
+            colspan = Math.abs(colspan-tam);
+            while(arow < elements[0].length && elements[arow][acol][0]===r && elements[arow][acol][1]===c){
+                if(!left) for(let i = acol; i <= (acol+colspan); i++) {
+                    if(!this.isRowsMerged(elements,arow,i))
+                        elements[arow][i] = [r,c];
+                    else{
+                        if(i===acol)continue;
+                        throw "Não pode sobrepor célula mesclada";
+                    }
+                }else for(let i = acol; i > Math.max(r,acol-colspan) ; i--){
+                    elements[arow][i] = [arow,i];
+                }
+                arow++;
+                this.elements = elements;
+                this.rearrangeCells();
+            }
+        }
     }
 
     mergeRows(r,c,rowspan){
         let elements = JSON.parse(JSON.stringify(this.elements));
-        if(rowspan!=0){
+        if(rowspan!==0){
             let up = rowspan<0, acol = c, arow = r;
             rowspan = Math.abs(rowspan);
             for(let i=0; i < elements.length;i++){
-                arow = elements[i][acol][0]==r?i:arow;
+                arow = elements[i][acol][0]===r?i:arow;
             }
             while(acol < elements[0].length && elements[arow][acol][0]===r && elements[arow][acol][1]===c){
                 if(!up) for(let i = arow; i <= (arow+rowspan); i++) {
                     if(!this.isColumnsMerged(elements,i,acol))
                         elements[i][acol] = [r,c];
                     else{
-                        Messages.error("Não pode sobrepor linha mesclada");
-                        break;
+                        if(i===arow)continue;
+                        throw "Não pode sobrepor célula mesclada";
                     }
                 }
                 else for(let i = arow; i > Math.max(r,arow-rowspan) ; i--){
