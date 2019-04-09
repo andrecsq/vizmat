@@ -1,13 +1,16 @@
 class GridConstructor{
-    constructor(rows,cols,container,views, formulas, matrixes){
-        this.formulas = formulas;
+    constructor(rows,container,views, formulas, matrixes,formulasSelector){
         this.matrixes = matrixes;
+        this.formulaSelector = formulasSelector;
+        this.matrixNames = Object.keys(matrixes);
+        this.actualFormula=this.formulaSelector.val();
+        this.matrixes.op = this.actualFormula;
         this.container = container;
         this.elements=[];
         this.views = views;
         for(let i=0;i<rows;i++){
             this.elements.push([]);
-            for(let j=0;j<cols;j++){
+            for(let j=0;j<this.matrixNames.length;j++){
                 this.elements[i].push([i,j]);
             }
         }
@@ -70,13 +73,11 @@ class GridConstructor{
 
     loadViewObj(cell,view,r,c){
         let viewClassContainer = this.views[view];
-
         this.mergeColumns(r,c,viewClassContainer.colspan);
-        
         let viewObj = new(viewClassContainer.class)();
         viewObj._container = cell[0];
+        viewObj._matrixNames = this.matrixNames.slice(c,c+viewClassContainer.colspan);
         viewObj._matrixes = this.matrixes;
-        viewObj._matrixNames = cell[0];
     }
 
     setEvents(cell,r,c){
@@ -97,21 +98,26 @@ class GridConstructor{
            let value = viewChooser.val();
            _this.loadViewObj(cell,value,r,c);
         });
+
+        this.formulaSelector.on("change",e=>{
+            _this.actualFormula = $(_this.formulaSelector).val();
+            _this.matrixes.op = _this.actualFormula;
+        })
     }
 
     isRowsMerged(elm,r,c){
-        return ( r+1 < elm.length    && elm[r+1][c][0]==elm[r][c][0] && elm[r+1][c][1]==elm[r][c][1])
-            || ( r-1 >= 0             && elm[r-1][c][0]==elm[r][c][0] && elm[r-1][c][1]==elm[r][c][1]);
+        return ( r+1 < elm.length    && elm[r+1][c][0]===elm[r][c][0] && elm[r+1][c][1]===elm[r][c][1])
+            || ( r-1 >= 0             && elm[r-1][c][0]===elm[r][c][0] && elm[r-1][c][1]===elm[r][c][1]);
     }
 
     isColumnsMerged(elm,r,c){
-        return ( c+1 < elm.length    && elm[r][c+1][0]==elm[r][c][0] && elm[r][c+1][1]==elm[r][c][1])
-            || ( c-1 >= 0             && elm[r][c-1][0]==elm[r][c][0] && elm[r][c-1][1]==elm[r][c][1]);
+        return ( c+1 < elm.length    && elm[r][c+1][0]===elm[r][c][0] && elm[r][c+1][1]===elm[r][c][1])
+            || ( c-1 >= 0             && elm[r][c-1][0]===elm[r][c][0] && elm[r][c-1][1]===elm[r][c][1]);
     }
 
     mergeColumns(r,c,colspan){
-        colspan = colspan===undefined?0:colspan;
-        if(colspan>=0){
+        colspan = colspan===undefined?1:colspan;
+        if(colspan>=1){
             let elements = JSON.parse(JSON.stringify(this.elements));
             let tam=0,left,acol = c, arow = r;
 
@@ -130,7 +136,7 @@ class GridConstructor{
                         if(i===acol)continue;
                         throw "Não pode sobrepor célula mesclada";
                     }
-                }else for(let i = acol; i > Math.max(r,acol-colspan) ; i--){
+                }else for(let i = acol; i > Math.max(c,acol-colspan) ; i--){
                     elements[arow][i] = [arow,i];
                 }
                 arow++;
