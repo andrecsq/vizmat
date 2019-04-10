@@ -1,26 +1,28 @@
 class Geometric2dView extends View{
-    constructor(est, matrixName, size, quant, transpose, htmlContainer, grids){
-        super();
-      this.est=est;
-      this.transpose = transpose;
-      this.center = {hor:(size.w/2),ver: (size.h/2)};
-      this.matrixName = matrixName;
-      this.quant = quant;
+    constructor(params){
+      super(params);
+      this.est=this._matrixes;
+      this.size = {w:200,h:200};
+      this.center = {hor:(this.size.w/2),ver: (this.size.h/2)};
+      this.matrixName = this._matrixNames[0];
+      this.quant = 10;
       this.step=(this.center.hor-10)/this.quant;
-      this.p5html = html`<div id="p5-${matrixName}" style="width: ${size.w}px; height: ${size.h}px;  display: inline; margin: 10px;"></div>`
+      this.p5html = $(`<div id="geo-p5-${this.matrixName}" style="width: ${this.size.w}px; height: ${this.size.h}px;  display: inline; margin: 10px;"></div>`)[0]
       this.onMatrixChange();
-      this.size = size;
       this.createP5();
       this.dragging=-1;
-      this.grids= grids
+      this.grids= 5;
       
-      this.htmlContainer=htmlContainer;
+      this.htmlContainer=$(this._container.body);
       this.htmlContainer.append(this.p5html);
     }
+
+
     onMatrixChange(){
-      if(!this.transpose)this.matrixEst = this.est[this.matrixName];
-      else this.matrixEst = this.est[this.matrixName].transpose();
+     this.matrixEst = this.est[this.matrixName];
     }
+
+
     createP5(){
       let _this=this;
       this.p5 = new P5(sk=>{
@@ -28,24 +30,37 @@ class Geometric2dView extends View{
         sk.draw=()=>{_this.drawP5(sk);};
       },this.p5html);
     }
+
+
+    onMoveStart(sk){
+      if (this.dragging == -1){ 
+        let p = this.calcPoint(sk.mouseX, sk.mouseY);
+        p.x = p.x/this.step;
+        p.y = p.y/this.step;
+        for(let i=0;i<this.matrixEst.size()[1];i++){
+          if (sk.dist(p.x.toFixed(2), p.y.toFixed(2), 
+                  this.matrixEst.subset(math.index(0,i)), this.matrixEst.subset(math.index(1,i))) < 0.4) this.dragging = i;
+        }     
+      }
+      this.matrixEst = this.matrixEst;
+    }
+  
+
+    onMoveEnd(sk){
+      this.dragging = -1;
+    }
+  
+
     setupP5(sk){
       let _this=this;
       this.cnv = sk.createCanvas(this.size.w, this.size.h);
       this.cnv.canvas.style.visibility="visible";
       sk.angleMode(sk.DEGREES);
-      this.cnv.mousePressed(()=>{ // CHECA SE O PONTO SELECIONADO É ALGUM DOS PONTOS DE DRAG/DROP
-        
-        if (this.dragging == -1){ 
-          let p = this.calcPoint(sk.mouseX, sk.mouseY);
-          p.x = p.x/this.step;
-          p.y = p.y/this.step;
-          for(let i=0;i<this.matrixEst.shape[1];i++){
-            if (sk.dist(p.x.toFixed(2), p.y.toFixed(2), 
-                        this.matrixEst.get(0,i), this.matrixEst.get(1,i)) < 0.4) this.dragging = i;
-          }     
-        }
-        this.cnv.mouseReleased(function() { _this.dragging = -1; });
-      });  
+
+      this.cnv.touchStarted(()=>this.onMoveStart(sk)); 
+      this.cnv.mousePressed(()=>this.onMoveStart(sk));
+      this.cnv.mouseReleased(()=>this.onMoveEnd(sk));
+      this.cnv.touchEnded(()=>this.onMoveEnd(sk));
     }
     
     drawP5(sk){
@@ -57,24 +72,24 @@ class Geometric2dView extends View{
         this.drawGuides(sk, `${Colors.g.fg1}`, 0.3, {x: 1, y: 0}, {x: 0, y: 1}); // TODO: passar pra nj
       }
       if (this.grids >= 2){
-        let i_tgt = {x: this.matrixEst.get(0,0), y: this.matrixEst.get(1,0)};
-        let j_tgt = {x: this.matrixEst.get(0,1), y: this.matrixEst.get(1,1)};
+        let i_tgt = {x: this.matrixEst.subset(math.index(0,0)), y: this.matrixEst.subset(math.index(1,0))};
+        let j_tgt = {x: this.matrixEst.subset(math.index(0,1)), y: this.matrixEst.subset(math.index(1,1))};
         this.drawGuides(sk, `${Colors.g.fg2}`, 0.5, i_tgt, j_tgt); // TODO: passar pra nj
       }
       
       //desenhaPlano(sk, 'blue', 1, i_tgt, j_tgt);
       //console.log(this.matrixEst.shape[1]);
-      for(let i=0;i<this.matrixEst.shape[1];i++){
+      for(let i=0;i<this.matrixEst.size()[1];i++){
         if(this.dragging==i){
           let p = this.calcPoint(sk.mouseX, sk.mouseY);
           p.x = p.x/this.step;
           p.y = p.y/this.step;
-          this.matrixEst.set(0,i,trunca((p.x)));
-          this.matrixEst.set(1,i,trunca((p.y)));
+          this.matrixEst.subset(math.index(0,i),trunca((p.x)));
+          this.matrixEst.subset(math.index(1,i),trunca((p.y)));
           this.est.op = this.est.op;
         }
         
-        this.drawArrow(sk,this.matrixEst.get(0,i)*this.step, this.step*this.matrixEst.get(1,i),`#${Colors.obj[i]}`);
+        this.drawArrow(sk,this.matrixEst.subset(math.index(0,i))*this.step, this.step*this.matrixEst.subset(math.index(1,i)),`${Colors.obj[i]}`);
         
       }
     }

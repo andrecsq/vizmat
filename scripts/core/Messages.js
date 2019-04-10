@@ -14,7 +14,7 @@ class Messages{
 
     static showToast(msg,type,debug){
         switch (type) {
-            case "Error":console.error(`${type}: ${msg}`.toString()); break;
+            case "Error":console.error(`${type}: ${msg}`.toString()); console.trace(msg); break;
             case "Warning":console.warn(`${type}: ${msg}`.toString()); break;
             default: if(debug) console.log(`${type}: ${msg}`.toString()); break;
         }
