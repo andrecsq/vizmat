@@ -4,13 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/colors.css">
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <div style="display: none" class="message-container">
-        <div class="msg"></div>
-        <div> <i class="fas fa-times"></i> </div>
-    </div>
+    <div class="messages-container"></div>
     <div class="main-header">
         <img class="logo" src="images/VisMat-logo.svg" alt="VisMat">
         <div>
@@ -24,15 +22,19 @@
         <div class="main-content">
         </div>
     </div>
-    <script src="libs/numjs.min.js"></script>
-    <script src="libs/matrix.js"></script>
-    <script src="libs/p5.dom.js"></script>
-    <script src="libs/p5.js"></script>
-    <script src="libs/p5.sound.js"></script>
-    <script src="scripts/core/Messages.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="libs/r.js"></script>
-    <script src="scripts/core/GridConstructor.js"></script>
+    <script src="libs/jquery-3.3.1.min.js"></script>
+    
+    <script src="libs/math.min.js"></script>
+    <script src="libs/libp5/p5/p5.js"></script>
+    <script src="libs/libp5/p5/addons/p5.dom.js"></script>
+    <script src="libs/libp5/p5/addons/p5.sound.js"></script>
+
+    
+    <script src="libs/requirejs/r.js"></script>
     <script src="scripts/core/rconfig.js"></script>
+   
+    <script src="scripts/core/View.js"></script>
+    <script src="scripts/core/Messages.js"></script>
+    <script src="scripts/core/GridConstructor.js"></script>
 </body>
 </html>

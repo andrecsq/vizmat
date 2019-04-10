@@ -1,11 +1,38 @@
+let P5=p5;
+
+let precisao = 100;
+function trunca (x){
+    return Math.round(x*precisao)/precisao;
+  }
+
+require.config({
+    baseUrl: "scripts",
+    paths: {
+        // Paths
+        views: "views",
+        formulas: "formulas",
+        // Libs 
+        text: "../libs/requirejs/text",
+    },
+    waitSeconds: 20
+});
+
+let _FnOut;
+let _loadedViews={};
 let _views = {};
 let _formulas={};
 let _matrixes = {};
 
 let _Mhandler = {set:(target, name, value)=>{
     target[name]= value;
-    _formulas[target['op']](target);
-    _views.forEach(element=>element.onMatrixChange());
+    if(name!="op"){
+        _formulas[target['op']].run(target);
+        for(let i in _loadedViews){
+            if(_loadedViews.hasOwnProperty(i)){
+                _loadedViews[i].onMatrixChange();
+            }
+        }
+    }
     return true;
 }};
 
@@ -30,29 +57,11 @@ Colors= {
     ]
 };
 
-require.config({
-    baseUrl: "scripts",
-    paths: {
-        views: "views",
-        formulas: "formulas"
-    },
-    waitSeconds: 0
-});
 
-class View{
-    constructor(matrixName,matrixes,container){
-        this._matrixNames = matrixName;
-        this._matrixes = matrixes || _matrixes;
-        this._container = container;
-    }
-
-    onMatrixChange(){
-        console.log("matrix updated");
-    }
-}
 
 async function mainLoad(M,views,fn){
     _matrixes = new Proxy(M,_Mhandler);
+    
 
     for(let i=0;i<views.length;i++){
         await new Promise(function(resolve,reject){
@@ -89,7 +98,7 @@ async function mainLoad(M,views,fn){
     formulaSelector.html(formulaOptions);
 
     let container = $(".main-content");
-    let grid = new GridConstructor(3,container,_views,_formulas,_matrixes,formulaSelector);
+    let grid = new GridConstructor(2,container,_views,_loadedViews,_formulas,_matrixes,formulaSelector);
 
 }
 

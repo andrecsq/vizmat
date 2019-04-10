@@ -2,6 +2,8 @@
 body{
     margin: 0;
     background-color: #ededed;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12pt;
 }
 
 .logo{
@@ -17,6 +19,7 @@ body{
     padding: 7px;
     background-color: rgba(84,110,122,0.9);/* rgba(255,255,255,0.6);*/
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    z-index: 1000;
 }
 
 
@@ -39,7 +42,7 @@ body{
 }
 
 .main-content>.vis-container{
-    border:1px solid #aaa;
+    border:2px solid #aaa;
     border-radius: 4px;
     min-height: 60px;
     position: relative;
@@ -83,3 +86,71 @@ body{
 
 .hide{display: none !important;}
 
+.messages-container{
+    position: fixed;
+    z-index: 2000;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 10px;
+}
+
+.messages-container [class^=msg-]{
+    position: relative;
+    display: flex;
+    justify-content: stretch;
+    color:white;
+    background-color: #ddd;
+    margin: 5px 0;
+    border-radius:5px; 
+}
+
+.messages-container [class^=msg-] .msg{
+    padding: 10px;
+    border-right: 1px solid white;
+    font-size: 11pt; 
+}
+
+.messages-container [class^=msg-] .close{
+    padding: 10px;
+}
+
+.messages-container [class^=msg-] .close:hover{
+    background-color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.messages-container .msg-error .close:hover{
+    color:#dd0022;
+}
+.messages-container .msg-error{
+    background-color: #dd0022;
+}
+
+.messages-container .msg-success .close:hover{
+    color:#03c061;
+}
+.messages-container .msg-success{
+    background-color: #03c061;
+}
+
+.messages-container .msg-warning .close:hover{
+    color:#dd8500;
+}
+.messages-container .msg-warning{
+    background-color: #dd8500;
+}
+
+.messages-container .msg-info .close:hover{
+    color:#007add;
+}
+.messages-container .msg-info{
+    background-color: #007add;
+}
+
+.answer{
+    border-color: var(--fg2) !important; 
+    border-width: 2px !important;
+}

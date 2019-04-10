@@ -1,6 +1,8 @@
 class GridConstructor{
-    constructor(rows,container,views, formulas, matrixes,formulasSelector){
+    constructor(rows,container,views,loadedViews, formulas, matrixes,formulasSelector){
         this.matrixes = matrixes;
+        this.formulas = formulas;
+        this.loadedViews=loadedViews;
         this.formulaSelector = formulasSelector;
         this.matrixNames = Object.keys(matrixes);
         this.actualFormula=this.formulaSelector.val();
@@ -25,9 +27,13 @@ class GridConstructor{
         }
         return `<section id="grid-${r}-${c}" style="grid-area: r${r}-c${c}" class="vis-container">
                     <div class="config">
-                        <select class="chooseView">
-                            ${viewsNames}
-                        </select>
+                        <div class="mainOptions">
+                            <select class="chooseView">
+                                ${viewsNames}
+                            </select>
+                        </div>
+                        <div class="viewOptions">
+                        </div>
                     </div>
                     <div class="content"></div>
                     <div class="spanButton ${(last?"hide":"")}">
@@ -71,13 +77,34 @@ class GridConstructor{
         if(create)this.container.append(gridElements);
     }
 
+    loadFormula(){
+        let oldFormula = this.actualFormula;
+        let newFormula = $(this.formulaSelector).val();
+        try{
+            this.matrixes.op = newFormula;
+            for(let i in this.loadedViews){
+                if(this.loadedViews.hasOwnProperty(i)){
+                    this.loadedViews[i]._out=this.formulas[this.actualFormula].out;
+                    this.loadedViews[i].onOutChange();
+                }
+            }           
+
+            this.actualFormula = newFormula;
+        }catch(e){
+            Messages.error(e);
+            this.matrixes.op = oldFormula;
+            this.actualFormula = oldFormula;
+        }
+       
+    }
+
     loadViewObj(cell,view,r,c){
         let viewClassContainer = this.views[view];
-        this.mergeColumns(r,c,viewClassContainer.colspan);
-        let viewObj = new(viewClassContainer.class)();
-        viewObj._container = cell[0];
-        viewObj._matrixNames = this.matrixNames.slice(c,c+viewClassContainer.colspan);
-        viewObj._matrixes = this.matrixes;
+        let colspan = viewClassContainer.colspan || 1;
+        let out = this.formulas[this.formulaSelector.val()].out;
+        this.mergeColumns(r,c,colspan);
+        let matrixNames = this.matrixNames.slice(c,c+colspan);
+        this.loadedViews[view+"-"+r+"-"+c]=new (viewClassContainer.class)({out:out,container:cell[0],matrixNames:matrixNames,matrixes:this.matrixes});
     }
 
     setEvents(cell,r,c){
@@ -85,7 +112,8 @@ class GridConstructor{
         let viewChooser =cell.find(".chooseView");
         let expandUp = cell.find("[data-expand=up]");
         let expandDown = cell.find("[data-expand=down]");
-
+        let oldView = viewChooser.val();
+        _this.loadViewObj(cell,oldView,r,c);
         expandUp.on("click",e=>{
             _this.mergeRows(r,c,-1);
         });
@@ -96,13 +124,19 @@ class GridConstructor{
 
         viewChooser.on("change",e=>{
            let value = viewChooser.val();
-           _this.loadViewObj(cell,value,r,c);
+           try{
+               _this.loadViewObj(cell,value,r,c);
+               oldView = value;
+           }catch(e){
+                Messages.error(e,true);
+                viewChooser.val(oldView);
+           }
         });
 
         this.formulaSelector.on("change",e=>{
-            _this.actualFormula = $(_this.formulaSelector).val();
-            _this.matrixes.op = _this.actualFormula;
+            _this.loadFormula();
         })
+        this.loadFormula();
     }
 
     isRowsMerged(elm,r,c){
@@ -111,24 +145,28 @@ class GridConstructor{
     }
 
     isColumnsMerged(elm,r,c){
-        return ( c+1 < elm.length    && elm[r][c+1][0]===elm[r][c][0] && elm[r][c+1][1]===elm[r][c][1])
+        return ( c+1 < elm[0].length    && elm[r][c+1][0]===elm[r][c][0] && elm[r][c+1][1]===elm[r][c][1])
             || ( c-1 >= 0             && elm[r][c-1][0]===elm[r][c][0] && elm[r][c-1][1]===elm[r][c][1]);
     }
 
     mergeColumns(r,c,colspan){
         colspan = colspan===undefined?1:colspan;
         if(colspan>=1){
+            colspan--;
+            if(c+colspan>this.elements[0].length) 
+                throw `View Maior que espaço alocado! tente alocar na ${(1+colspan-this.elements[0].length)}ª célula`;
             let elements = JSON.parse(JSON.stringify(this.elements));
             let tam=0,left,acol = c, arow = r;
 
-            for(let i=0; i < elements.length;i++){
+            for(let i=0; i < elements[0].length;i++){
                 if(elements[arow][i][1]===c){
                     acol=i; tam++;
                 }
             }
+            
             left = colspan<tam;
             colspan = Math.abs(colspan-tam);
-            while(arow < elements[0].length && elements[arow][acol][0]===r && elements[arow][acol][1]===c){
+            while(arow < elements.length && elements[arow][acol][0]===r && elements[arow][acol][1]===c){
                 if(!left) for(let i = acol; i <= (acol+colspan); i++) {
                     if(!this.isRowsMerged(elements,arow,i))
                         elements[arow][i] = [r,c];

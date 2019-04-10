@@ -1,7 +1,7 @@
 define(()=>function(matrixes){
     try{
-        matrixes.C = matrixes.A.dot(matrixes.B);
+        matrixes.C = math.multiply(matrixes.A,matrixes.B);
     }catch (e) {
-        Message.error("dimensões diferentes");
+        Messages.error("dimensões diferentes");
     }
 });
