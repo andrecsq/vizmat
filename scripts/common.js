@@ -1,6 +1,0 @@
-requirejs.config({
-    baseUrl: "./"
-
-
-
-});

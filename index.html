@@ -1,52 +1,38 @@
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"> 
-  <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>Projeto ALA</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/colors.css">
+    <link rel="stylesheet" href="styles/main.css">
 </head>
-<h2 class="centertext">Visualizador de matrizes </h2>
-    <div class="gridparent" >
-        <div class="gridele ">
-            <p class="select">Operação:</p> <select class="select" >
-                    <option value="Multiplicação">Multiplicação</option>
-                    <option value="QR">QR</option>
-                    <option value="LU">LU</option>
-                    <option value="Solve">Solve</option>
-                  </select> 
-        </div>
-        <div class="gridele "> 
-                <p class="select">Visualização 1: </p> <select class="select" >
-                        <option value="numerica">Numérica</option>
-                        <option value="geometrica">Geométrica 2D</option>
-                        <option value="grafos">Grafos</option>
-                        <option value="funcoes">Funções</option>
-                      </select> 
-        </div>
-        <div class="gridele ">
-                <p class="select">Visualização 1: </p> <select class="select" >
-                        <option value="numerica">Numérica</option>
-                        <option value="geometrica">Geométrica 2D</option>
-                        <option value="grafos">Grafos</option>
-                        <option value="funcoes">Funções</option>
-                      </select> 
-        </div>
-        <div class="visualizagrid" >
-            <h5>Visualização 1:</h5>
-            <div class="visublock" id="visu1">
-
-            </div>
-        </div>
-        <div class="visualizagrid" >
-                <h5>Visualização 2:</h5>
-                <div class="visublock" id="visu2">
-                    
-                </div>
-            </div>
-    </div>
-
 <body>
-  
+    <div class="messages-container"></div>
+    <div class="main-header">
+        <img class="logo" src="images/VisMat-logo.svg" alt="VisMat">
+        <div>
+            <label>Formula:</label>
+            <select name="formula" id="formula"></select>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="main-content">
+        </div>
+    </div>
+    <script src="libs/jquery-3.3.1.min.js"></script>
+    
+    <script src="libs/math.min.js"></script>
+    <script src="libs/libp5/p5/p5.js"></script>
+    <script src="libs/libp5/p5/addons/p5.dom.js"></script>
+    <script src="libs/libp5/p5/addons/p5.sound.js"></script>
+
+    
+    <script src="libs/requirejs/r.js"></script>
+    <script src="scripts/core/rconfig.js"></script>
+   
+    <script src="scripts/core/View.js"></script>
+    <script src="scripts/core/Messages.js"></script>
+    <script src="scripts/core/GridConstructor.js"></script>
 </body>
-
-<script data-main="scripts/common" src="libraries/r.js"></script>
-
 </html>

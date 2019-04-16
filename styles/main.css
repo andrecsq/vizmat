@@ -1,0 +1,156 @@
+
+body{
+    margin: 0;
+    background-color: #ededed;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12pt;
+}
+
+.logo{
+    height: 100%;
+}
+
+.main-header{
+    display: flex;
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    box-sizing: border-box;
+    padding: 7px;
+    background-color: rgba(84,110,122,0.9);/* rgba(255,255,255,0.6);*/
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+
+.main-container{
+    display: block;
+    box-sizing: border-box;
+    padding: 80px 20px 20px 20px ;
+    min-width: 900px;
+}
+
+.main-content{
+    display: grid;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    background-color: white;
+    padding: 20px 20px 40px 20px;
+    grid-column-gap: 5px;
+    grid-row-gap: 30px;
+}
+
+.main-content>.vis-container{
+    border:2px solid #aaa;
+    border-radius: 4px;
+    min-height: 60px;
+    position: relative;
+}
+
+.main-content>.vis-container .config{
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.vis-container .spanButton{
+    position: absolute;
+    display: inline-flex;
+    justify-content: space-between;
+    color:#546E7A;
+    width: 100px;
+    border-radius: 20px;
+    height: 30px;
+    bottom: -30px;
+    left: calc(50% - 50px);
+    transition: background-color 300ms linear;
+}
+
+.vis-container .spanButton:hover{
+    background-color: rgba(84,110,122,0.3);
+}
+
+.vis-container .spanButton span{
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+}
+.vis-container .spanButton span:hover{
+    background-color:  #546E7A;
+    color: white;
+}
+
+.hide{display: none !important;}
+
+.messages-container{
+    position: fixed;
+    z-index: 2000;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 10px;
+}
+
+.messages-container [class^=msg-]{
+    position: relative;
+    display: flex;
+    justify-content: stretch;
+    color:white;
+    background-color: #ddd;
+    margin: 5px 0;
+    border-radius:5px; 
+}
+
+.messages-container [class^=msg-] .msg{
+    padding: 10px;
+    border-right: 1px solid white;
+    font-size: 11pt; 
+}
+
+.messages-container [class^=msg-] .close{
+    padding: 10px;
+}
+
+.messages-container [class^=msg-] .close:hover{
+    background-color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.messages-container .msg-error .close:hover{
+    color:#dd0022;
+}
+.messages-container .msg-error{
+    background-color: #dd0022;
+}
+
+.messages-container .msg-success .close:hover{
+    color:#03c061;
+}
+.messages-container .msg-success{
+    background-color: #03c061;
+}
+
+.messages-container .msg-warning .close:hover{
+    color:#dd8500;
+}
+.messages-container .msg-warning{
+    background-color: #dd8500;
+}
+
+.messages-container .msg-info .close:hover{
+    color:#007add;
+}
+.messages-container .msg-info{
+    background-color: #007add;
+}
+
+.answer{
+    border-color: var(--fg2) !important; 
+    border-width: 2px !important;
+}

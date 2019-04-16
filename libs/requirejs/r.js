@@ -26975,7 +26975,7 @@ function (lang,   logger,   envOptimize,        file,           parse,
      */
     function cleanCssUrlQuotes(url) {
         //Make sure we are not ending in whitespace.
-        //Not very confident of the css regexps above that there will not be ending
+        //Not very confident of the styles regexps above that there will not be ending
         //whitespace.
         url = url.replace(/\s+$/, "");
 
@@ -27106,7 +27106,7 @@ function (lang,   logger,   envOptimize,        file,           parse,
                 importList.push(fullImportFileName);
                 return importContents;
             } catch (e) {
-                logger.warn(fileName + "\n  Cannot inline css import, skipping: " + importFileName);
+                logger.warn(fileName + "\n  Cannot inline styles import, skipping: " + importFileName);
                 return fullMatch;
             }
         });
@@ -27322,10 +27322,9 @@ function (lang,   logger,   envOptimize,        file,           parse,
          * Optimizes CSS files, inlining @import calls, stripping comments, and
          * optionally removes line returns.
          * @param {String} startDir the path to the top level directory
-         * @param {Object} config the config object with the optimizeCss and
          * cssImportIgnore options.
          */
-        css: function (startDir, config) {
+        css: function (startDir) {
             var buildText = "",
                 importList = [],
                 shouldRemove = config.dir && config.removeCombined,
@@ -28499,7 +28498,7 @@ define('build', function (require) {
             //things like text loader plugins loading CSS to get the optimized
             //CSS.
             if (config.optimizeCss && config.optimizeCss !== "none" && config.dir) {
-                buildFileContents += optimize.css(config.dir, config);
+                buildFileContents += optimize.css(config.dir);
             }
         }).then(function() {
             baseConfig = copyConfig(require.s.contexts._.config);
@@ -30410,7 +30409,7 @@ function (args, quit, logger, build) {
         //Just run an app
 
         //Load the bundled libraries for use in the app.
-        if (commandOption === 'lib') {
+        if (commandOption === 'libs') {
             loadLib();
         }
 
