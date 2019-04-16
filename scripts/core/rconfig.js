@@ -57,12 +57,7 @@ Colors= {
     ]
 };
 
-
-
-async function mainLoad(M,views,fn){
-    _matrixes = new Proxy(M,_Mhandler);
-    
-
+async function loadViewsClasses(views){
     for(let i=0;i<views.length;i++){
         await new Promise(function(resolve,reject){
             require([`views/${views[i].file || views[i].name || views[i]}`],_View=>{
@@ -75,9 +70,10 @@ async function mainLoad(M,views,fn){
             });
         });
     }
+}
 
+async function loadFormulas(fn){
     let formulaOptions = "";
-
     for(let i=0; i< fn.length;i++){
         await new Promise((resolve,reject)=> {
             require([`formulas/${fn[i].file || fn[i].name || fn[i]}`], _Fn => {
@@ -92,6 +88,16 @@ async function mainLoad(M,views,fn){
             })
         })
     }
+    return formulaOptions;
+}
+
+
+async function mainLoad(M,views,fn){
+    _matrixes = new Proxy(M,_Mhandler);
+    
+    await loadViewsClasses(views);
+
+    let formulaOptions = await loadFormulas(fn);
 
     let formulaSelector=$("#formula");
 

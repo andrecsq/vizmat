@@ -86,7 +86,7 @@ class Geometric2dView extends View{
           p.y = p.y/this.step;
           this.matrixEst.subset(math.index(0,i),trunca((p.x)));
           this.matrixEst.subset(math.index(1,i),trunca((p.y)));
-          this.est.op = this.est.op;
+          this._matrixes[this.matrixName] = this._matrixes[this.matrixName];
         }
         
         this.drawArrow(sk,this.matrixEst.subset(math.index(0,i))*this.step, this.step*this.matrixEst.subset(math.index(1,i)),`${Colors.obj[i]}`);

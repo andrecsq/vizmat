@@ -1,4 +1,7 @@
 class Messages{
+
+    static lastMessage;
+
     static load(container){
         Messages.container = $(".messages-container");
     }
@@ -13,6 +16,10 @@ class Messages{
     }
 
     static showToast(msg,type,debug){
+        if(msg.toString() == Messages.lastMessage){
+            return;
+        }
+        Messages.lastMessage = msg;
         switch (type) {
             case "Error":console.error(`${type}: ${msg}`.toString()); console.trace(msg); break;
             case "Warning":console.warn(`${type}: ${msg}`.toString()); break;
@@ -25,11 +32,13 @@ class Messages{
         Messages.container.append(msgWrapp);
         let closeTime = setTimeout(()=>{
             msgWrapp.remove();
+            Messages.lastMessage=undefined;
         },timewait);
 
         msgWrapp.find(".close").on("click",e=>{
             clearTimeout(closeTime);
             msgWrapp.remove();
+            Messages.lastMessage=undefined;
         })
         msgWrapp.on("mouseover",e=>{
             clearTimeout(closeTime);
@@ -37,6 +46,7 @@ class Messages{
         msgWrapp.on("mouseout",e=>{
             closeTime = setTimeout(()=>{
                 msgWrapp.remove();
+                Messages.lastMessage=undefined;
             },timewait);
         })
 
