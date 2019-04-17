@@ -108,4 +108,4 @@ async function mainLoad(M,views,fn){
 
 }
 
-require(["core/Matrixes","views/_registry","formulas/_registry"],(M,views,fn)=>{ mainLoad(M,views,fn); });
+require(["core/Matrixes","views/registry","formulas/registry"],(M,views,fn)=>{ mainLoad(M,views,fn); });
