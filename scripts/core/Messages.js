@@ -1,7 +1,5 @@
 class Messages{
 
-    static lastMessage;
-
     static load(container){
         Messages.container = $(".messages-container");
     }
