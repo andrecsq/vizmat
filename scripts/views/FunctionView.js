@@ -17,7 +17,7 @@ class FunctionView extends View{
     this.step={x: (this.size.w-10)/this.matrixEst.size()[0]
                , y: (this.size.h-10)/(this.height+1) };
     
-    this.p5html = $(`<div id="p5-${this.matrixName}" style="width: ${this.size.w}px; height: ${this.size.h}px;  display: inline-block; margin: 10px;"></div>`);
+    this.p5html = $(`<div id="p5-${this.matrixName}" style="width: ${this.size.w}px; height: ${this.size.h}px;"></div>`);
     this.createP5();
     this.grids= 10;
     

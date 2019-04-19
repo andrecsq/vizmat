@@ -42,7 +42,11 @@ class View{
         });
        
         $(this._container.body).html('');
-        $(this._container.header).html('');
+        $(this._container.header).find(`[data-matrix-name]`).addClass("hide");
+        for(let i =0;i<this._matrixNames.length;i++){
+            $(this._container.header).find(`[data-matrix-name=${this._matrixNames[i]}]`).removeClass("hide");
+        }
+
         this.onOutChange();
     }
 

@@ -7,7 +7,7 @@ class Geometric2dView extends View{
       this.matrixName = this._matrixNames[0];
       this.quant = 10;
       this.step=(this.center.hor-10)/this.quant;
-      this.p5html = $(`<div id="geo-p5-${this.matrixName}" style="width: ${this.size.w}px; height: ${this.size.h}px;  display: inline; margin: 10px;"></div>`)[0]
+      this.p5html = $(`<div id="geo-p5-${this.matrixName}" style="width: ${this.size.w}px; height: ${this.size.h}px;"></div>`)[0]
       this.onMatrixChange();
       this.createP5();
       this.dragging=-1;

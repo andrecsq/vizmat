@@ -22,23 +22,36 @@ class GridConstructor{
    loadCell(r, c){
         let last= r==this.elements.length-1;
         let viewsNames="";
+        let matrixNames="";
         for(let i in this.views) {
             viewsNames += `<option value="${i}">${i}</option>`;
         }
-        return `<section id="grid-${r}-${c}" style="grid-area: r${r}-c${c}" class="vis-container">
+        for(let i=0;i<this.matrixNames.length;i++){
+            matrixNames += this.getmatrixOptionsButton(this.matrixNames[i]);
+
+        }
+
+       return  `<section id="grid-${r}-${c}" style="grid-area: r${r}-c${c}" class="vis-container">
                     <div class="config">
                         <div class="mainOptions">
-                            <select class="chooseView">
-                                ${viewsNames}
-                            </select>
+                            <div class="header-input-group">
+                                <select class="chooseView">
+                                    ${viewsNames}
+                                </select>
+                            </div>
                         </div>
                         <div class="viewOptions">
+                            ${matrixNames}
                         </div>
+                         <div class="moreOptions">
+                         </div>
                     </div>
                     <div class="content"></div>
-                    <div class="spanButton ${(last?"hide":"")}">
-                        <span data-expand="down"><i class="fas fa-angle-down"></i></span>
-                        <span data-expand="up"><i class="fas fa-angle-up"></i></span>
+                    <div class="wrappspanButton">
+                        <div data-dir="down" class="spanButton ${(last?"hide":"")}">
+                            <span data-expand="down"><i class="fas fa-angle-down"></i></span>
+                            <span data-expand="up"><i class="fas fa-angle-up"></i></span>
+                        </div>
                     </div>
                 </section>`;
     }
@@ -98,6 +111,21 @@ class GridConstructor{
        
     }
 
+    getmatrixOptionsButton(matrixName){
+        return `<div data-matrix-name="${matrixName}" class="m-options hide">
+                        <div class="m-name">
+                            <div>
+                                ${matrixName}
+                            </div>
+                            <div class="matrix-size">
+                                (<span class="numlin">0</span>
+                                x
+                                <span class="numcol">0</span>)
+                            </div>
+                        </div>
+                    </div>`;
+    }
+
     loadViewObj(cell,view,r,c){
         let viewClassContainer = this.views[view];
         let colspan = viewClassContainer.colspan || 1;
@@ -114,12 +142,21 @@ class GridConstructor{
         let expandDown = cell.find("[data-expand=down]");
         let oldView = viewChooser.val();
         _this.loadViewObj(cell,oldView,r,c);
-        expandUp.on("click",e=>{
-            _this.mergeRows(r,c,-1);
+        expandUp.on("click",function(){
+
+            try{
+                _this.mergeRows(r,c,-1,this);
+            }catch(e){
+                Messages.error(e,true);
+            }
         });
 
-        expandDown.on("click",e=>{
-            _this.mergeRows(r,c,1);
+        expandDown.on("click",function(){
+            try{
+                _this.mergeRows(r,c,1,this);
+            }catch(e){
+                Messages.error(e,true);
+            }
         });
 
         viewChooser.on("change",e=>{
@@ -184,8 +221,9 @@ class GridConstructor{
         }
     }
 
-    mergeRows(r,c,rowspan){
+    mergeRows(r,c,rowspan,elm){
         let elements = JSON.parse(JSON.stringify(this.elements));
+        let lastcell;
         if(rowspan!==0){
             let up = rowspan<0, acol = c, arow = r;
             rowspan = Math.abs(rowspan);
@@ -200,11 +238,22 @@ class GridConstructor{
                         if(i===arow)continue;
                         throw "Não pode sobrepor célula mesclada";
                     }
+                    lastcell=i;
                 }
                 else for(let i = arow; i > Math.max(r,arow-rowspan) ; i--){
                     elements[i][acol] = [i,acol];
+                    lastcell=i;
                 }
                 acol++;
+            }
+
+
+            if(up && arow-rowspan===r){
+                $(elm).parent().attr("data-dir","down");
+            }else if(arow+rowspan===(elements.length-1)){
+                $(elm).parent().attr("data-dir","up");
+            }else{
+                $(elm).parent().attr("data-dir","both");
             }
 
             this.elements = elements;
