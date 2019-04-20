@@ -19,19 +19,36 @@ class GridConstructor{
         this.createGridCells(this.elements);
     }
 
-   loadCell(r, c){
+    loadCell(r, c){
         let last= r==this.elements.length-1;
         let viewsNames="";
-        let matrixNames="";
+        let matrixNameButtons="";
+        let matrixNameModals="";
+        let matrixNameTitles="";
         for(let i in this.views) {
             viewsNames += `<option value="${i}">${i}</option>`;
         }
         for(let i=0;i<this.matrixNames.length;i++){
-            matrixNames += this.getmatrixOptionsButton(this.matrixNames[i]);
-
+            matrixNameTitles += `<div class="matrix-name-title matrix-name-title-${this.matrixNames[i]}"><span>${this.matrixNames[i]}</span></div>`;
+            matrixNameButtons += this.getmatrixOptionsButton(this.matrixNames[i]);
+            matrixNameModals+=this.getmatrixOptionsModalContainer(this.matrixNames[i]);
         }
 
+
+
        return  `<section id="grid-${r}-${c}" style="grid-area: r${r}-c${c}" class="vis-container">
+                    <div class="vis-modal"> 
+                        <div class="close-button">
+                            <span><i class="fa fa-times"></i></span>
+                        </div>    
+                        <div class="vis-modal-content">
+                            ${matrixNameTitles}
+                            <div class="itens">
+                                ${matrixNameModals}
+                            </div>
+                        </div>            
+                    </div>
+                   
                     <div class="config">
                         <div class="mainOptions">
                             <div class="header-input-group">
@@ -41,10 +58,8 @@ class GridConstructor{
                             </div>
                         </div>
                         <div class="viewOptions">
-                            ${matrixNames}
+                            ${matrixNameButtons}
                         </div>
-                         <div class="moreOptions">
-                         </div>
                     </div>
                     <div class="content"></div>
                     <div class="wrappspanButton">
@@ -113,26 +128,35 @@ class GridConstructor{
 
     getmatrixOptionsButton(matrixName){
         return `<div data-matrix-name="${matrixName}" class="m-options hide">
-                        <div class="m-name">
-                            <div>
-                                ${matrixName}
-                            </div>
-                            <div class="matrix-size">
-                                (<span class="numlin">0</span>
-                                x
-                                <span class="numcol">0</span>)
-                            </div>
-                        </div>
-                    </div>`;
+                    <div>
+                        ${matrixName}
+                    </div>
+                    <div class="matrix-size">
+                        (<span class="numlin">0</span>
+                        x
+                        <span class="numcol">0</span>)
+                    </div>       
+                </div>`;
+    }
+
+    getmatrixOptionsModalContainer(matrixName){
+        return `<div data-matrixName="${matrixName}" class="vis-modal-content-matrix vis-modal-content-matrix-${matrixName}"> 
+                </div>`;
     }
 
     loadViewObj(cell,view,r,c){
         let viewClassContainer = this.views[view];
         let colspan = viewClassContainer.colspan || 1;
         let out = this.formulas[this.formulaSelector.val()].out;
-        this.mergeColumns(r,c,colspan);
+        this.mergeColumns(r,c,colspan,cell);
         let matrixNames = this.matrixNames.slice(c,c+colspan);
-        this.loadedViews[view+"-"+r+"-"+c]=new (viewClassContainer.class)({out:out,container:cell[0],matrixNames:matrixNames,matrixes:this.matrixes});
+        let viewObj = new (viewClassContainer.class)({out:out,container:cell[0],matrixNames:matrixNames,matrixes:this.matrixes});
+        this.loadedViews[view+"-"+r+"-"+c]= viewObj;
+        let visModal = $(cell).find(".vis-modal");
+        let visBody = $(viewObj._container.body);
+        let visHeader = $(viewObj._container.header);
+        this.loadVisModals(matrixNames,visModal,visBody,visHeader);
+        viewObj._loadConfig();
     }
 
     setEvents(cell,r,c){
@@ -189,9 +213,9 @@ class GridConstructor{
     mergeColumns(r,c,colspan){
         colspan = colspan===undefined?1:colspan;
         if(colspan>=1){
-            colspan--;
-            if(c+colspan>this.elements[0].length) 
-                throw `View Maior que espaço alocado! tente alocar na ${(1+colspan-this.elements[0].length)}ª célula`;
+            if(c+colspan>this.elements[0].length) {
+                throw `View Maior que espaço alocado! tente alocar na ${(1 + colspan - this.elements[0].length)}ª célula`;
+            }
             let elements = JSON.parse(JSON.stringify(this.elements));
             let tam=0,left,acol = c, arow = r;
 
@@ -203,9 +227,10 @@ class GridConstructor{
             
             left = colspan<tam;
             colspan = Math.abs(colspan-tam);
+
             while(arow < elements.length && elements[arow][acol][0]===r && elements[arow][acol][1]===c){
                 if(!left) for(let i = acol; i <= (acol+colspan); i++) {
-                    if(!this.isRowsMerged(elements,arow,i))
+                    if(!(this.isRowsMerged(elements,arow,i)||this.isColumnsMerged(elements,arow,i)))
                         elements[arow][i] = [r,c];
                     else{
                         if(i===acol)continue;
@@ -215,9 +240,9 @@ class GridConstructor{
                     elements[arow][i] = [arow,i];
                 }
                 arow++;
-                this.elements = elements;
-                this.rearrangeCells();
             }
+            this.elements = elements;
+            this.rearrangeCells();
         }
     }
 
@@ -258,6 +283,41 @@ class GridConstructor{
 
             this.elements = elements;
             this.rearrangeCells();
+        }
+    }
+
+    loadVisModals(matrixNames,visModal,visBody,visHeader){
+        let  btnMatrixNames = visHeader.find(`[data-matrix-name]`),
+            modalOptions = visModal.find(`.vis-modal-content`), modalOptionsContents = modalOptions.find(`.itens`).children();
+
+        btnMatrixNames.addClass("hide");
+        modalOptionsContents.addClass("hide");
+        visModal.addClass("hide");
+        for(let i =0;i<matrixNames.length;i++){
+            let mName = matrixNames[i];
+            let mSize = this.matrixes[mName].size();
+            let btn = btnMatrixNames.filter(`[data-matrix-name=${matrixNames[i]}]`);
+            btn.find('.numlin').text(mSize[0]);
+            btn.find('.numcol').text(mSize[1]);
+            let closeBtn = visModal.find(`.close-button`);
+            closeBtn.on("click",function(){
+                let container = $(this).closest(`.vis-container`);
+                let modal = container.find('.vis-modal');
+                let modalContents = modal.find(`.vis-modal-content-matrix, .matrix-name-title`);
+                modal.addClass("hide");
+                modalContents.addClass("hide");
+            });
+            btn.removeClass("hide");
+            btn.on("click",function(){
+                let container = $(this).closest(`.vis-container`);
+                let modal = container.find('.vis-modal');
+                let modalContents = modal.find(`.vis-modal-content-matrix, .matrix-name-title`);
+                let modalContent = modalContents.filter(`.vis-modal-content-matrix-${matrixNames[i]}, .matrix-name-title-${matrixNames[i]}`);
+                modalOptions.scrollTop(0);
+                modal.removeClass("hide");
+                modalContents.addClass("hide");
+                modalContent.removeClass("hide");
+            });
         }
     }
 }

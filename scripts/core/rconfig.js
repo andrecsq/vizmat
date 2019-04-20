@@ -1,5 +1,15 @@
 let P5=p5;
 
+function uuid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
 let precisao = 100;
 function trunca (x){
     return Math.round(x*precisao)/precisao;
@@ -29,7 +39,7 @@ let _Mhandler = {set:(target, name, value)=>{
         _formulas[target['op']].run(target);
         for(let i in _loadedViews){
             if(_loadedViews.hasOwnProperty(i)){
-                _loadedViews[i].onMatrixChange();
+                _loadedViews[i]._onMatrixChange();
             }
         }
     }

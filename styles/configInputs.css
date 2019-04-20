@@ -1,0 +1,44 @@
+.input-group{
+    display: inline-flex;
+    width: 100%;
+    flex-direction: column;
+    background-color: rgba(255,255,255,0.9);
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin: 2px;
+}
+.input-group .input-group-label{
+    font-size: 8pt;
+    color: #222;
+    margin-bottom: 4px;
+}
+
+.input-group .input *{
+   appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #222;
+    background-color: transparent;
+    width: 100%;
+}
+
+.w-50{
+ width: calc(50% - 6px);
+}
+
+.w-25{
+    width: calc(25% - 6px);
+}
+
+.w-75{
+    width: calc(75% - 6px);
+}
+
+.w-100{
+    width: calc(100% - 6px);
+}

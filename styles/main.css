@@ -44,14 +44,19 @@ body{
 .main-content>.vis-container{
     border:2px solid #aaa;
     border-radius: 4px;
-    min-height: 60px;
+    min-height: 150px;
     position: relative;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
 }
 
 .main-content>.vis-container>.content{
     overflow:hidden;
-    z-index: 100;
+    height: 100%;
+    z-index: 50;
+    display: flex;
+    flex-grow: 2;
 }
 
 .main-content>.vis-container .config{
@@ -61,6 +66,7 @@ body{
     border-bottom: 1px solid #ccc;
     z-index: 200;
     background-color: white;
+    height: 33px;
 }
 
 .vis-container .wrappspanButton{
@@ -224,8 +230,8 @@ select:hover,select:focus{
     width: 100%;
 }
 .m-options{
-    display: flex;
-    cursor:hand;
+    display: block;
+    cursor:pointer;
     align-items: center;
     justify-content: center;
     border-left: 1px solid #ccc;
@@ -238,16 +244,58 @@ select:hover,select:focus{
     background-color: #eee;
 }
 
-.m-options .m-name{
+.m-options {
     text-align: center;
 }
 
-.m-options .m-name div:first-of-type{
+.m-options div:first-of-type{
     font-size: 11.5pt;
 }
 
 
-.m-options .m-name div:last-of-type{
+.m-options div:last-of-type{
     font-size: 6.5pt;
+}
+
+.vis-container .vis-modal{
+    width: 100%;
+    z-index: 100;
+    height: 100%;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-top: 35px;
+    background-color: rgba(255,255,255,0.7);
+    position: absolute;
+}
+
+.vis-container .vis-modal .close-button{
+    background-color: #fefefe;
+    position: absolute;
+    right: 15px;
+    z-index: 10;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 3px;
+    color:#666;
+}
+.vis-container .vis-modal .close-button:hover{
+    color: #111;
+}
+
+.vis-container .vis-modal .vis-modal-content{
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+    align-items: center;
+}
+.vis-container .vis-modal .matrix-name-title{
+    display: block;
+    width: 100%;
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 15px;
 }
 
