@@ -49,8 +49,14 @@ class View{
 
         let visBody =  $(this._container.body);
         visBody.html('');
-
+        let _this=this;
         this.onOutChange();
+        this._loadEventOnResize();
+        visBody.ready(function (e) {
+            let w = visBody[0].offsetWidth;
+            let h = visBody[0].offsetHeight;
+            _this.onResize(w,h);
+        });
     }
 
     _loadConfig(){
@@ -80,6 +86,26 @@ class View{
         }
     }
 
+    onResize(w,h){
+        console.log(w,h);
+    }
+
+    _loadEventOnResize(){
+        let _this=this;
+        let visBody = this._container.body;
+        let w = visBody.offsetWidth;
+        let h = visBody.offsetHeight;
+        $(window).resize(function(){
+            let nw = visBody.offsetWidth;
+            let nh = visBody.offsetHeight;
+            if(nw!==w||nh!==h){
+                h = nh;
+                w = nw;
+                _this.onResize(w,h);
+            }
+
+        });
+    }
 
     _reloadConfig(){
         let visModal = $(this._container.modal);

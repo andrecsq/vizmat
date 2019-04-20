@@ -159,25 +159,36 @@ class GridConstructor{
         viewObj._loadConfig();
     }
 
+    onViewResize(cell,view,r,c){
+        let visBody = cell.find(".content");
+        let w = visBody[0].offsetWidth;
+        let h = visBody[0].offsetHeight;
+        this.loadedViews[view+"-"+r+"-"+c].onResize(w,h);
+    }
+
     setEvents(cell,r,c){
         let _this=this;
         let viewChooser =cell.find(".chooseView");
         let expandUp = cell.find("[data-expand=up]");
         let expandDown = cell.find("[data-expand=down]");
         let oldView = viewChooser.val();
+
         _this.loadViewObj(cell,oldView,r,c);
         expandUp.on("click",function(){
-
+            let view = viewChooser.val();
             try{
                 _this.mergeRows(r,c,-1,this);
+                _this.onViewResize(cell,view,r,c);
             }catch(e){
                 Messages.error(e,true);
             }
         });
 
         expandDown.on("click",function(){
+            let view = viewChooser.val();
             try{
                 _this.mergeRows(r,c,1,this);
+                _this.onViewResize(cell,view,r,c);
             }catch(e){
                 Messages.error(e,true);
             }

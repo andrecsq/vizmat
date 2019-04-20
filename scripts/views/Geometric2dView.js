@@ -22,18 +22,25 @@ class Geometric2dView extends View{
      this.matrixEst = this.est[this.matrixName];
     }
 
+    onResize(w, h) {
+        this.size = {w:w,h:h};
+        this.sk.resizeCanvas(this.size.w,this.size.h);
+        this.center = {hor:(this.size.w/2),ver: (this.size.h/2)};
+        this.step=(this.center.hor-10)/this.quant;
+    }
 
     createP5(){
       let _this=this;
       this.p5 = new P5(sk=>{
-        sk.setup=()=>{_this.setupP5(sk);};
-        sk.draw=()=>{_this.drawP5(sk);};
+          _this.sk=sk;
+          sk.setup=()=>{_this.setupP5(sk);};
+          sk.draw=()=>{_this.drawP5(sk);};
       },this.p5html);
     }
 
 
     onMoveStart(sk){
-      if (this.dragging == -1){ 
+      if (this.dragging === -1){
         let p = this.calcPoint(sk.mouseX, sk.mouseY);
         p.x = p.x/this.step;
         p.y = p.y/this.step;
@@ -42,7 +49,7 @@ class Geometric2dView extends View{
                   this.matrixEst.subset(math.index(0,i)), this.matrixEst.subset(math.index(1,i))) < 0.4) this.dragging = i;
         }     
       }
-      this.matrixEst = this.matrixEst;
+      this._matrixes[this.matrixName] = this._matrixes[this.matrixName];
     }
   
 

@@ -22,6 +22,32 @@ body{
     z-index: 1000;
 }
 
+.main-header .header-menu{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    justify-items: end;
+    flex-grow: 2;
+    padding: 20px;
+}
+
+.main-header .header-menu .header-input-group{
+    display: flex;
+    border: 1px solid #fefefe;
+    align-items: center;
+    border-radius: 3px;
+}
+
+.main-header .header-menu .header-input-group label{
+    padding: 5px;
+    color: white;
+    font-size: 10pt;
+}
+.main-header .header-menu .header-input-group select{
+    padding: 5px;
+    color: rgb(84,110,122);
+}
+
 
 .main-container{
     display: block;
@@ -144,9 +170,10 @@ select:hover,select:focus{
     height: inherit;
 }
 
-.header-input-group select{
+.config .header-input-group select{
     height: inherit;
     position: relative;
+    color: #666;
 }
 
 .messages-container{
