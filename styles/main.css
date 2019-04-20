@@ -43,11 +43,11 @@ body{
     color: white;
     font-size: 10pt;
 }
+
 .main-header .header-menu .header-input-group select{
-    padding: 5px;
+    padding: 5px 20px 5px 5px;
     color: rgb(84,110,122);
 }
-
 
 .main-container{
     display: block;
