@@ -6,14 +6,18 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/colors.css">
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/configInputs.css">
 </head>
 <body>
     <div class="messages-container"></div>
     <div class="main-header">
         <img class="logo" src="images/VisMat-logo.svg" alt="VisMat">
-        <div>
-            <label>Formula:</label>
-            <select name="formula" id="formula"></select>
+        <div class="header-menu">
+            <div class="header-input-group">
+                <label for="formula">Fórmula:</label>
+                <select name="formula" id="formula"></select>
+            </div>
+
         </div>
     </div>
     <div class="main-container">
@@ -21,7 +25,7 @@
         </div>
     </div>
     <script src="libs/jquery-3.3.1.min.js"></script>
-    
+    <script src="scripts/core/ConfigConstruct.js"></script>
     <script src="libs/math.min.js"></script>
     <script src="libs/libp5/p5/p5.js"></script>
     <script src="libs/libp5/p5/addons/p5.dom.js"></script>

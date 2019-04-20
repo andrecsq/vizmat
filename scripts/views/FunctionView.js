@@ -17,14 +17,19 @@ class FunctionView extends View{
     this.step={x: (this.size.w-10)/this.matrixEst.size()[0]
                , y: (this.size.h-10)/(this.height+1) };
     
-    this.p5html = $(`<div id="p5-${this.matrixName}" style="width: ${this.size.w}px; height: ${this.size.h}px;  display: inline-block; margin: 10px;"></div>`);
+    this.p5html = $(`<div id="p5-${this.matrixName}-${uuid()}" style="width: ${this.size.w}px; height: ${this.size.h}px;"></div>`);
     this.createP5();
     this.grids= 10;
     
     this.htmlContainer=this._container.body;
     this.htmlContainer.append(this.p5html[0]);
   }
-  
+
+  onResize(w, h) {
+    this.size = {w:w,h:h};
+    this.sk.resizeCanvas(this.size.w,this.size.h);
+  }
+
   onMatrixChange(){
     this.matrixEst = this.est[this.matrixName];
     this.step={x: (this.size.w-10)/this.matrixEst.size()[0]
@@ -51,6 +56,7 @@ class FunctionView extends View{
   createP5(){
     let _this=this;
     this.p5 = new P5(sk=>{
+      _this.sk=sk;
       sk.setup=()=>{_this.setupP5(sk);};
       sk.draw=()=>{_this.drawP5(sk);};
     },this.p5html[0]);

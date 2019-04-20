@@ -19,26 +19,54 @@ class GridConstructor{
         this.createGridCells(this.elements);
     }
 
-   loadCell(r, c){
+    loadCell(r, c){
         let last= r==this.elements.length-1;
         let viewsNames="";
+        let matrixNameButtons="";
+        let matrixNameModals="";
+        let matrixNameTitles="";
         for(let i in this.views) {
             viewsNames += `<option value="${i}">${i}</option>`;
         }
-        return `<section id="grid-${r}-${c}" style="grid-area: r${r}-c${c}" class="vis-container">
+        for(let i=0;i<this.matrixNames.length;i++){
+            matrixNameTitles += `<div class="matrix-name-title matrix-name-title-${this.matrixNames[i]}"><span>${this.matrixNames[i]}</span></div>`;
+            matrixNameButtons += this.getmatrixOptionsButton(this.matrixNames[i]);
+            matrixNameModals+=this.getmatrixOptionsModalContainer(this.matrixNames[i]);
+        }
+
+
+
+       return  `<section id="grid-${r}-${c}" style="grid-area: r${r}-c${c}" class="vis-container">
+                    <div class="vis-modal"> 
+                        <div class="close-button">
+                            <span><i class="fa fa-times"></i></span>
+                        </div>    
+                        <div class="vis-modal-content">
+                            ${matrixNameTitles}
+                            <div class="itens">
+                                ${matrixNameModals}
+                            </div>
+                        </div>            
+                    </div>
+                   
                     <div class="config">
                         <div class="mainOptions">
-                            <select class="chooseView">
-                                ${viewsNames}
-                            </select>
+                            <div class="header-input-group">
+                                <select class="chooseView">
+                                    ${viewsNames}
+                                </select>
+                            </div>
                         </div>
                         <div class="viewOptions">
+                            ${matrixNameButtons}
                         </div>
                     </div>
                     <div class="content"></div>
-                    <div class="spanButton ${(last?"hide":"")}">
-                        <span data-expand="down"><i class="fas fa-angle-down"></i></span>
-                        <span data-expand="up"><i class="fas fa-angle-up"></i></span>
+                    <div class="wrappspanButton">
+                        <div data-dir="down" class="spanButton ${(last?"hide":"")}">
+                            <span data-expand="down"><i class="fas fa-angle-down"></i></span>
+                            <span data-expand="up"><i class="fas fa-angle-up"></i></span>
+                        </div>
                     </div>
                 </section>`;
     }
@@ -98,13 +126,44 @@ class GridConstructor{
        
     }
 
+    getmatrixOptionsButton(matrixName){
+        return `<div data-matrix-name="${matrixName}" class="m-options hide">
+                    <div>
+                        ${matrixName}
+                    </div>
+                    <div class="matrix-size">
+                        (<span class="numlin">0</span>
+                        x
+                        <span class="numcol">0</span>)
+                    </div>       
+                </div>`;
+    }
+
+    getmatrixOptionsModalContainer(matrixName){
+        return `<div data-matrixName="${matrixName}" class="vis-modal-content-matrix vis-modal-content-matrix-${matrixName}"> 
+                </div>`;
+    }
+
     loadViewObj(cell,view,r,c){
         let viewClassContainer = this.views[view];
         let colspan = viewClassContainer.colspan || 1;
         let out = this.formulas[this.formulaSelector.val()].out;
-        this.mergeColumns(r,c,colspan);
+        this.mergeColumns(r,c,colspan,cell);
         let matrixNames = this.matrixNames.slice(c,c+colspan);
-        this.loadedViews[view+"-"+r+"-"+c]=new (viewClassContainer.class)({out:out,container:cell[0],matrixNames:matrixNames,matrixes:this.matrixes});
+        let viewObj = new (viewClassContainer.class)({out:out,container:cell[0],matrixNames:matrixNames,matrixes:this.matrixes});
+        this.loadedViews[view+"-"+r+"-"+c]= viewObj;
+        let visModal = $(cell).find(".vis-modal");
+        let visBody = $(viewObj._container.body);
+        let visHeader = $(viewObj._container.header);
+        this.loadVisModals(matrixNames,visModal,visBody,visHeader);
+        viewObj._loadConfig();
+    }
+
+    onViewResize(cell,view,r,c){
+        let visBody = cell.find(".content");
+        let w = visBody[0].offsetWidth;
+        let h = visBody[0].offsetHeight;
+        this.loadedViews[view+"-"+r+"-"+c].onResize(w,h);
     }
 
     setEvents(cell,r,c){
@@ -113,13 +172,26 @@ class GridConstructor{
         let expandUp = cell.find("[data-expand=up]");
         let expandDown = cell.find("[data-expand=down]");
         let oldView = viewChooser.val();
+
         _this.loadViewObj(cell,oldView,r,c);
-        expandUp.on("click",e=>{
-            _this.mergeRows(r,c,-1);
+        expandUp.on("click",function(){
+            let view = viewChooser.val();
+            try{
+                _this.mergeRows(r,c,-1,this);
+                _this.onViewResize(cell,view,r,c);
+            }catch(e){
+                Messages.error(e,true);
+            }
         });
 
-        expandDown.on("click",e=>{
-            _this.mergeRows(r,c,1);
+        expandDown.on("click",function(){
+            let view = viewChooser.val();
+            try{
+                _this.mergeRows(r,c,1,this);
+                _this.onViewResize(cell,view,r,c);
+            }catch(e){
+                Messages.error(e,true);
+            }
         });
 
         viewChooser.on("change",e=>{
@@ -152,9 +224,9 @@ class GridConstructor{
     mergeColumns(r,c,colspan){
         colspan = colspan===undefined?1:colspan;
         if(colspan>=1){
-            colspan--;
-            if(c+colspan>this.elements[0].length) 
-                throw `View Maior que espaço alocado! tente alocar na ${(1+colspan-this.elements[0].length)}ª célula`;
+            if(c+colspan>this.elements[0].length) {
+                throw `View Maior que espaço alocado! tente alocar na ${(1 + colspan - this.elements[0].length)}ª célula`;
+            }
             let elements = JSON.parse(JSON.stringify(this.elements));
             let tam=0,left,acol = c, arow = r;
 
@@ -166,9 +238,10 @@ class GridConstructor{
             
             left = colspan<tam;
             colspan = Math.abs(colspan-tam);
+
             while(arow < elements.length && elements[arow][acol][0]===r && elements[arow][acol][1]===c){
                 if(!left) for(let i = acol; i <= (acol+colspan); i++) {
-                    if(!this.isRowsMerged(elements,arow,i))
+                    if(!(this.isRowsMerged(elements,arow,i)||this.isColumnsMerged(elements,arow,i)))
                         elements[arow][i] = [r,c];
                     else{
                         if(i===acol)continue;
@@ -178,14 +251,15 @@ class GridConstructor{
                     elements[arow][i] = [arow,i];
                 }
                 arow++;
-                this.elements = elements;
-                this.rearrangeCells();
             }
+            this.elements = elements;
+            this.rearrangeCells();
         }
     }
 
-    mergeRows(r,c,rowspan){
+    mergeRows(r,c,rowspan,elm){
         let elements = JSON.parse(JSON.stringify(this.elements));
+        let lastcell;
         if(rowspan!==0){
             let up = rowspan<0, acol = c, arow = r;
             rowspan = Math.abs(rowspan);
@@ -200,15 +274,61 @@ class GridConstructor{
                         if(i===arow)continue;
                         throw "Não pode sobrepor célula mesclada";
                     }
+                    lastcell=i;
                 }
                 else for(let i = arow; i > Math.max(r,arow-rowspan) ; i--){
                     elements[i][acol] = [i,acol];
+                    lastcell=i;
                 }
                 acol++;
             }
 
+
+            if(up && arow-rowspan===r){
+                $(elm).parent().attr("data-dir","down");
+            }else if(arow+rowspan===(elements.length-1)){
+                $(elm).parent().attr("data-dir","up");
+            }else{
+                $(elm).parent().attr("data-dir","both");
+            }
+
             this.elements = elements;
             this.rearrangeCells();
+        }
+    }
+
+    loadVisModals(matrixNames,visModal,visBody,visHeader){
+        let  btnMatrixNames = visHeader.find(`[data-matrix-name]`),
+            modalOptions = visModal.find(`.vis-modal-content`), modalOptionsContents = modalOptions.find(`.itens`).children();
+
+        btnMatrixNames.addClass("hide");
+        modalOptionsContents.addClass("hide");
+        visModal.addClass("hide");
+        for(let i =0;i<matrixNames.length;i++){
+            let mName = matrixNames[i];
+            let mSize = this.matrixes[mName].size();
+            let btn = btnMatrixNames.filter(`[data-matrix-name=${matrixNames[i]}]`);
+            btn.find('.numlin').text(mSize[0]);
+            btn.find('.numcol').text(mSize[1]);
+            let closeBtn = visModal.find(`.close-button`);
+            closeBtn.on("click",function(){
+                let container = $(this).closest(`.vis-container`);
+                let modal = container.find('.vis-modal');
+                let modalContents = modal.find(`.vis-modal-content-matrix, .matrix-name-title`);
+                modal.addClass("hide");
+                modalContents.addClass("hide");
+            });
+            btn.removeClass("hide");
+            btn.on("click",function(){
+                let container = $(this).closest(`.vis-container`);
+                let modal = container.find('.vis-modal');
+                let modalContents = modal.find(`.vis-modal-content-matrix, .matrix-name-title`);
+                let modalContent = modalContents.filter(`.vis-modal-content-matrix-${matrixNames[i]}, .matrix-name-title-${matrixNames[i]}`);
+                modalOptions.scrollTop(0);
+                modal.removeClass("hide");
+                modalContents.addClass("hide");
+                modalContent.removeClass("hide");
+            });
         }
     }
 }
