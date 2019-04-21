@@ -5,6 +5,9 @@ class FunctionView extends View{
     this.radius=10;
     
     this.matrixName = this._matrixNames[0];
+    
+    
+    
     this.size = {h:200,w:200};
     this.colors = [];
     this.onMatrixChange();
@@ -12,28 +15,36 @@ class FunctionView extends View{
     this.height_lo = Math.ceil(Math.abs(Math.min(0,math.min(this.matrixEst))));
     this.height_hi = Math.ceil(math.max(this.matrixEst));
     this.height = this.height_hi + this.height_lo;
+    this.step={x: (this.size.w-10)/this.matrixEst.size()[0]
+               , y: (this.size.h-10)/(this.height+1) };    
     this.center = {hor:Math.max(10,this.step.x/2), ver: (this.height_hi+1)*this.size.h/(this.height+2)};
     this.dragging= [-1,-1];
-    this.step={x: (this.size.w-10)/this.matrixEst.size()[0]
-               , y: (this.size.h-10)/(this.height+1) };
     
     this.p5html = $(`<div id="p5-${this.matrixName}-${uuid()}" style="width: ${this.size.w}px; height: ${this.size.h}px;"></div>`);
     this.createP5();
-    this.grids= 10;
     
     this.htmlContainer=this._container.body;
     this.htmlContainer.append(this.p5html[0]);
-  }
+    
+   }
 
   onResize(w, h) {
     this.size = {w:w,h:h};
-    this.sk.resizeCanvas(this.size.w,this.size.h);
+    this.step={x: (this.size.w-10)/this.matrixEst.size()[0]
+               , y: (this.size.h-10)/(this.height+1) };    
+    this.center = {hor:Math.max(10,this.step.x/2), ver: (this.height_hi+1)*this.size.h/(this.height+2)}; 
+    this.sk.resizeCanvas(this.size.w,this.size.h);   
   }
 
   onMatrixChange(){
     this.matrixEst = this.est[this.matrixName];
+    this.quant = this.matrixEst.size()[1];
+    this.height_lo = Math.ceil(Math.abs(Math.min(0,math.min(this.matrixEst))));
+    this.height_hi = Math.ceil(math.max(this.matrixEst));
+    this.height = this.height_hi + this.height_lo;
     this.step={x: (this.size.w-10)/this.matrixEst.size()[0]
-               , y: (this.size.h-10)/(this.height+1) };
+               , y: (this.size.h-10)/(this.height+1) };    
+    this.center = {hor:Math.max(10,this.step.x/2), ver: (this.height_hi+1)*this.size.h/(this.height+2)};
   }
   
   onMoveStart(sk){
