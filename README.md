@@ -12,11 +12,9 @@
 # O Projeto ALA
 
 Este projeto tem o objetivo pedagógico de auxiliar o professor de Algebra Linear no ensino
-da referida disciplina.
+da referida disciplina. O presente arquivo tem o objetivo de apresentar e ajudar no entendimento do funcionamento da aplicação.
 
-O presente arquivo tem o objetivo de apresentar e ajudar no entendimento do funcionamento da aplicação.
-
-O projeto ALA é um WebApp desenvolvido por alunos de Ciência da Computação da UFRJ, e consiste de partes independentes e configuráveis. Tais partes são: A estrutura de dados (Matrizes), as Visualizações e as Fórmulas.
+O projeto ALA é um WebApp desenvolvido por alunos de Ciência da Computação da UFRJ, e consiste de partes independentes e configuráveis. Tais partes são: A estrutura de dados (matrixes), as Fórmulas e as Visualizações.
 
 ## A estrutura de dados (matrixes)
 A Estrutura de dados é onde ficará contido todos os dados numéricos estruturados das matrizes propriamente ditas.Para o usuário comum, esta estutura não está disponível para visualização ou manipulação direta.
@@ -33,4 +31,4 @@ As visualizações são a maneira que o usuário final tem de interagir com a es
 
 ## Para desenvolvedores
 * Como criar uma fórmula: ["/howto/Criar uma fórmula.md"](/howto/Criar%20uma%20fórmula.md)
-* Como criar uma visualização: ["howto/Criar uma visualização"](/howto/Criar%20uma%20visualização.md)
+* Como criar uma visualização: ["howto/Criar uma visualização.md"](/howto/Criar%20uma%20visualização.md)
