@@ -1,21 +1,51 @@
 # Índice
 * [Estrutura Básica](#estrutura-básica)
   * [Modelo padrão de uma visualização](#modelo-padrão-de-uma-visualização)
-    * [A classe View](#a-classe-view)
-    * [Extendendo a classe View](#extendendo-a-classe-view)
-    * [Importando bibliotecas externas](#importando-bibliotecas-externas)
-    * [Recursos Herdados](#recursos-herdados)
+  * [A classe View](#a-classe-view)
+  * [Importando bibliotecas externas](#importando-bibliotecas-externas)
+  * [Recursos Herdados](#recursos-herdados)
       * [Propriedades Herdadas](#propriedades-herdadas)
       * [Métodos Herdados](#métodos-herdados)
 * [Criei minha visualização, e agora?](#criei-minha-visualização-e-agora)
 * [Recursos](#recursos)
+  * [Bibliotecas](#bibliotecas)
+  * [Helpers](#helpers)
+* [Recomendações](#recomendações)
 
 # Estrutura Básica
+
+As visualizações possuem uma pasta correta para sua localização. esta pasta é [/scripts/views](/script/views).
+
+Se sua visualização precisar de mais de um arquivo para funcionar (como html's ou css's), crie uma pasta com o nome de sua visualização e dentro crie um arquivo javascript com o mesmo nome. 
+
+Se sua visualização precisar de apenas um arquivo para funcionar, apenas crie um arquivo javascript com o nome de sua visualização.
+
+Este javascript criado será sua classe de visualização. Nele que todas as funcionalidades de sua visualização serão inseridas.
+
 ## Modelo padrão de uma visualização
 
-### A classe View
+As visualizações são partes cruciais do projeto. Elas são a cara do que se quer ver no webapp e por isso precisam de um certo cuidado ao serem criadas. Por isso existe uma forma correta de construí-las.
+Abaixo você pode ver um exemplo de classe de visualização. Observe que a classe estende uma outra classe chamada View (falaremos sobre a classe View depois).
+Todas as visualizações recebem muitos dados de parâmetros e estes dados devem ser repassados para a View, por isso no construtor de sua classe você deve, antes de qualquer outro comando, inserir o comando ``super(params)``, sendo *"params"* o parâmetro do construtor.
 
-### Extendendo a classe view
+```javascript
+class ExampleView extends View{
+  constructor(params){
+    super(params);
+  }
+
+}
+
+//Ao final do seu arquivo, você deve adicionar o método define.
+define(()=>ExampleView);
+```
+
+Para que sua classe seja devidamente reconhecida pelo sistema, é necessário que você coloque ao final do seu arquivo o comando define recebendo como parâmetro um callback que retorne **sua classe** (como exemplificado acima);
+
+
+## A classe View
+
+A classe view é uma classe que serve para o sistema fazer o "dirty work" das visualizações. Ela inicializa objetos e propriedades que serão de extrema importância para serem usados por sua visualização. Todos os dados que o sistema passa através do parâmetro no construtor de sua classe são manipulados e refinados pela classe view para que fiquem utilizáveis pela visualização que você pretende construir.
 
 ### Importando bibliotecas externas
 
@@ -34,3 +64,4 @@
 ## Bibliotecas
 
 ## Helpers
+# Recomendações

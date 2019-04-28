@@ -31,4 +31,4 @@ As visualizações são a maneira que o usuário final tem de interagir com a es
 
 ## Para desenvolvedores
 * Como criar uma fórmula: ["/howto/Criar uma fórmula.md"](/howto/Criar%20uma%20fórmula.md)
-* Como criar uma visualização: ["howto/Criar uma visualização.md"](/howto/Criar%20uma%20visualização.md)
+* Como criar uma visualização: ["/howto/Criar uma visualização.md"](/howto/Criar%20uma%20visualização.md)
