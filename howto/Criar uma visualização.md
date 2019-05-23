@@ -45,13 +45,29 @@ Para que sua classe seja devidamente reconhecida pelo sistema, é necessário qu
 
 ## A classe View
 
-A classe view é uma classe que serve para o sistema fazer o "dirty work" das visualizações. Ela inicializa objetos e propriedades que serão de extrema importância para serem usados por sua visualização. Todos os dados que o sistema passa através do parâmetro no construtor de sua classe são manipulados e refinados pela classe view para que fiquem utilizáveis pela visualização que você pretende construir.
+A classe view é uma classe que serve para o sistema fazer o "dirty work" das visualizações. Ela inicializa objetos e propriedades que serão de extrema importância para serem usados por sua visualização. Todos os dados que o sistema passa através do parâmetro no construtor de sua classe são manipulados e refinados pela classe view para que fiquem utilizáveis pela visualização que você pretende construir, por isso é importante chamar a diretiva super passando o parâmetro do seu construtor.
 
 ### Importando bibliotecas externas
 
 ### Recursos Herdados
+A partir da classe view o desenvolvedor de visualizações tem acesso a uma série de propriedades e métodos do sistema que serão úteis para o desenvolvimento.
 
 #### Propriedades Herdadas
+São dados do sistema que informam coisas importantes, como os nomes das matrizes usadas na célula, os valores das matrizes, etc. Abaixo estão listados todas estas propriedades.
+- _matrixNames
+
+- _matrixes
+
+- _container
+
+  - header
+
+  - body
+
+  - modal
+
+- _out
+
 
 #### Métodos Herdados
 * onMatrixChange
