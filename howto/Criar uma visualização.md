@@ -54,19 +54,27 @@ A partir da classe view o desenvolvedor de visualizações tem acesso a uma sér
 
 #### Propriedades Herdadas
 São dados do sistema que informam coisas importantes, como os nomes das matrizes usadas na célula, os valores das matrizes, etc. Abaixo estão listados todas estas propriedades.
-- _matrixNames
 
-- _matrixes
+***_matrixNames***:  
+Array com nomes das matrizes (A, B, C ...) que serão representadas pela visualização. Isto é calculado baseado na posição inicial da célula somado ao tamanho horizontal(colspan) dela.
 
-- _container
+Você pode acessar esta propriedades em qualquer parte da sua visualização (se ela estender View) através de ``this._matrixNames``.
 
-  - header
+***_matrixes***:  
+A estrutura de dados contendo todas as matrizes. Maiores detalhes desta estrutura podem ser encontrados na seção de [Recursos](#recursos).
 
-  - body
+Você pode acessar esta propriedades em qualquer parte da sua visualização (se ela estender View) através de ``this._matrixes``.
 
-  - modal
+***_container***:
+Objeto que contem os seguintes elementos.
 
-- _out
+  - *header*: Elemento html do header da célula de visualização.
+
+  - *body*: Elemento html do "inner container"
+
+  - *modal*:
+
+***_out***:
 
 
 #### Métodos Herdados

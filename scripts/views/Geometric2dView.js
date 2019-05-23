@@ -1,6 +1,7 @@
 class Geometric2dView extends View{
     constructor(params){
       super(params);
+
       this.est=this._matrixes;
       this.size = {w:200,h:200};
       this.center = {hor:(this.size.w/2),ver: (this.size.h/2)};
@@ -80,12 +81,15 @@ class Geometric2dView extends View{
       }
       if (this.grids >= 2){
         let i_tgt = {x: this.matrixEst.subset(math.index(0,0)), y: this.matrixEst.subset(math.index(1,0))};
-        let j_tgt = {x: this.matrixEst.subset(math.index(0,1)), y: this.matrixEst.subset(math.index(1,1))};
-        this.drawGuides(sk, `${Colors.g.fg2}`, 0.5, i_tgt, j_tgt); // TODO: passar pra nj
+        let j_tgt;
+        if(this.matrixEst.size()[1]>1){
+          j_tgt = {x: this.matrixEst.subset(math.index(0,1)), y: this.matrixEst.subset(math.index(1,1))};
+        }else{
+          j_tgt = {x:0,y:0};
+        }
+          this.drawGuides(sk, `${Colors.g.fg2}`, 0.5, i_tgt, j_tgt); // TODO: passar pra nj
       }
       
-      //desenhaPlano(sk, 'blue', 1, i_tgt, j_tgt);
-      //console.log(this.matrixEst.shape[1]);
       for(let i=0;i<this.matrixEst.size()[1];i++){
         if(this.dragging==i){
           let p = this.calcPoint(sk.mouseX, sk.mouseY);
@@ -95,8 +99,7 @@ class Geometric2dView extends View{
           this.matrixEst.subset(math.index(1,i),trunca((p.y)));
           this._matrixes[this.matrixName] = this._matrixes[this.matrixName];
         }
-        
-        this.drawArrow(sk,this.matrixEst.subset(math.index(0,i))*this.step, this.step*this.matrixEst.subset(math.index(1,i)),`${Colors.obj[i]}`);
+       this.drawArrow(sk,this.matrixEst.subset(math.index(0,i))*this.step, this.step*this.matrixEst.subset(math.index(1,i)),`${Colors.obj[i]}`);
         
       }
     }
