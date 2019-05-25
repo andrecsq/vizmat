@@ -18,11 +18,14 @@ class Messages{
             return;
         }
         Messages.lastMessage = msg;
-        switch (type) {
-            case "Error":console.error(`${type}: ${msg}`.toString()); console.trace(msg); break;
-            case "Warning":console.warn(`${type}: ${msg}`.toString()); break;
-            default: if(debug) console.log(`${type}: ${msg}`.toString()); break;
+        if(debug){
+            switch (type) {
+                case "Error":console.error(`${type}: ${msg}`.toString()); console.trace(msg); break;
+                case "Warning":console.warn(`${type}: ${msg}`.toString()); break;
+                default: console.log(`${type}: ${msg}`.toString()); break;
+            }
         }
+        
         let msgWrapp = Messages.contentWrapper(msg,type);
         
         let timewait = 3000;

@@ -46,7 +46,7 @@ class View{
                 configurable: false
             }
         });
-
+        this.visModal=$(this._container.modal);
         let visBody =  $(this._container.body);
         visBody.html('');
         let _this=this;
@@ -60,13 +60,13 @@ class View{
     }
 
     _loadConfig(){
-        let visModal = $(this._container.modal);
+        let visModal = this.visModal;
         let mNames = this._matrixNames;
         for(let i=0;i<mNames.length;i++){
             let _this=this;
             let mName = mNames[i];
             let matrix = this._matrixes[mName];
-            let matrixContent = visModal.find(`[data-matrixName="${mName}"]`);
+            let matrixContent = this.getModalMatrix(mName);
             matrixContent.html('');
             let inputcol = CfCo.numberInput('numcols','nº de Colunas<br>(vetores)',matrix.size()[1]);
             let inputrow = CfCo.numberInput('numrows','nº de Linhas<br>dimensão)',matrix.size()[0]);
@@ -127,6 +127,10 @@ class View{
             inputcol.val(mSize[1]);
             inputrows.val(mSize[0]);
         }
+    }
+
+    getModalMatrix(matrixName){
+      return this.visModal.find(`[data-matrixName="${matrixName}"]`);
     }
 
     async _onMatrixChange(){
