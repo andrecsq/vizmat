@@ -10,7 +10,6 @@
 * [Recursos](#recursos)
   * [Bibliotecas](#bibliotecas)
   * [Helpers](#helpers)
-* [Recomendações](#recomendações)
 
 # Estrutura Básica
 
