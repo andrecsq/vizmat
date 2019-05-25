@@ -60,7 +60,7 @@ Array com nomes das matrizes (A, B, C ...) que serão representadas pela visuali
 Você pode acessar esta propriedades em qualquer parte da sua visualização (se ela estender View) através de ``this._matrixNames``.
 
 ***_matrixes***:  
-A estrutura de dados contendo todas as matrizes. Maiores detalhes desta estrutura podem ser encontrados no arquivo [Criar uma fórmula](./Criar%20uma%20fórmula#a-estrutura-das-matrizes).
+A estrutura de dados contendo todas as matrizes. Maiores detalhes desta estrutura podem ser encontrados no arquivo [Criar uma fórmula](Criar%20uma%20f%C3%B3rmula.md#a-estrutura-das-matrizes).
 
 Você pode acessar esta propriedades em qualquer parte da sua visualização (se ela estender View) através de ``this._matrixes``.
 
