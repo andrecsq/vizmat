@@ -151,7 +151,7 @@ class GridConstructor{
         this.mergeColumns(r,c,colspan,cell);
         let matrixNames = this.matrixNames.slice(c,c+colspan);
         let viewObj = new (viewClassContainer.class)({out:out,container:cell[0],matrixNames:matrixNames,matrixes:this.matrixes});
-        this.loadedViews[view+"-"+r+"-"+c]= viewObj;
+        this.loadedViews[`View-${r}-${c}`]= viewObj;
         let visModal = $(cell).find(".vis-modal");
         let visBody = $(viewObj._container.body);
         let visHeader = $(viewObj._container.header);
