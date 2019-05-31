@@ -163,7 +163,7 @@ class GridConstructor{
         let visBody = cell.find(".content");
         let w = visBody[0].offsetWidth;
         let h = visBody[0].offsetHeight;
-        this.loadedViews[view+"-"+r+"-"+c].onResize(w,h);
+        this.loadedViews[`View-${r}-${c}`].onResize(w,h);
     }
 
     setEvents(cell,r,c){
