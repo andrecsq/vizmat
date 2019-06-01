@@ -30,14 +30,19 @@ class GraphView extends View{
         let sM = this._matrixes[this._matrixNames[1]];
         let tM = this._matrixes[this._matrixNames[2]];
         let sS=sM.size();
+        
         let tS=tM.size();
         let fS = fM.size();
+
+        if(sS[1]>1 || tS[1]>1){
+            Messages.warn(`Recomenda-se que as matrizes ${this._matrixNames[1]} e ${this._matrixNames[2]} tenham só 1 coluna, cada.`);
+        }
+
         let dotSrc = `
             digraph {
             graph [pad="0.212,0.055" rankdir="LR"]
             node [style=filled]
         `
-        
         for (let j = 0; j < sS[0]; j++) { 
             let value = trunca(sM.subset(math.index(j,0)));
             dotSrc += `B_${j}[fillcolor="${Colors.obj[0]}" pos="0,${-2*j }!" label="${value}"]\n`;
@@ -54,7 +59,6 @@ class GraphView extends View{
                 }
             }
         }
-        
         dotSrc += `}`
         this.graphviz.renderDot(dotSrc);
     }
