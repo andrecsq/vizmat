@@ -166,6 +166,16 @@ class GridConstructor{
         this.loadedViews[`View-${r}-${c}`].onResize(w,h);
     }
 
+    onAllViewsResize(){
+        for(let i=0; i < this.elements.length;i++){
+            for(let j=0;j<this.elements[i].length;j++){
+                let cell = this.container.find(`#grid-${i}-${j}`);
+                this.onViewResize(cell,null,i,j);
+            
+            }
+        }
+    }
+
     setEvents(cell,r,c){
         let _this=this;
         let viewChooser =cell.find(".chooseView");
@@ -178,7 +188,7 @@ class GridConstructor{
             let view = viewChooser.val();
             try{
                 _this.mergeRows(r,c,-1,this);
-                _this.onViewResize(cell,view,r,c);
+                _this.onAllViewsResize();
             }catch(e){
                 Messages.error(e,true);
             }
@@ -188,7 +198,7 @@ class GridConstructor{
             let view = viewChooser.val();
             try{
                 _this.mergeRows(r,c,1,this);
-                _this.onViewResize(cell,view,r,c);
+                _this.onAllViewsResize();
             }catch(e){
                 Messages.error(e,true);
             }
@@ -199,6 +209,7 @@ class GridConstructor{
            try{
                _this.loadViewObj(cell,value,r,c);
                oldView = value;
+               _this.onAllViewsResize();
            }catch(e){
                 Messages.error(e,true);
                 viewChooser.val(oldView);
@@ -207,6 +218,7 @@ class GridConstructor{
 
         this.formulaSelector.on("change",e=>{
             _this.loadFormula();
+            _this.onAllViewsResize()
         })
         this.loadFormula();
     }

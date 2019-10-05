@@ -42,3 +42,21 @@
 .w-100{
     width: calc(100% - 6px);
 }
+
+.mb1{
+    margin-bottom: 2%;
+}
+
+
+.mb2{
+    margin-bottom: 4%;
+}
+
+.ml1{
+    margin-left: 2%;
+}
+
+
+.ml2{
+    margin-left: 4%;
+}

@@ -31,6 +31,7 @@ let _FnOut;
 let _loadedViews={};
 let _views = {};
 let _formulas={};
+let _datasets={};
 let _matrixes = {};
 
 let _Mhandler = {set:(target, name, value)=>{
@@ -101,11 +102,27 @@ async function loadFormulas(fn){
     return formulaOptions;
 }
 
+async function loadDatasets(fn){
+    for(let i=0; i< fn.length;i++){
+        await new Promise((resolve,reject)=> {
+            require([`datasets/${fn[i].file || fn[i].name || fn[i]}`], _Fn => {
+                if (_Fn !== undefined) {
+                    let fnName = fn[i].name || fn[i];
+                    let fnFile = fn[i].file || fnName;
+                    _datasets[fnName] = {name: fnName, content: _Fn};
+                }
+                resolve();
+            })
+        })
+    }
+}
 
-async function mainLoad(M,views,fn){
+
+async function mainLoad(M,views,fn,ds){
     _matrixes = new Proxy(M,_Mhandler);
     
     await loadViewsClasses(views);
+    await loadDatasets(ds);
 
     let formulaOptions = await loadFormulas(fn);
 
@@ -114,8 +131,9 @@ async function mainLoad(M,views,fn){
     formulaSelector.html(formulaOptions);
 
     let container = $(".main-content");
+    let datasets = new DatasetsConstructor(_datasets, _matrixes, $("#dataset-container"), $('#datasets-open'));
     let grid = new GridConstructor(2,container,_views,_loadedViews,_formulas,_matrixes,formulaSelector);
 
 }
 
-require(["core/Matrixes","views/registry","formulas/registry"],(M,views,fn)=>{ mainLoad(M,views,fn); });
+require(["core/Matrixes","views/registry","formulas/registry","datasets/registry"],(M,views,fn,ds)=>{ mainLoad(M,views,fn,ds); });
