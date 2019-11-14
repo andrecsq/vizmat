@@ -158,7 +158,25 @@ select{
     background-position: right 4px top 50%;
     transition: background-color 150ms ease-in-out;
     border: 2px solid transparent;
+    background-color: white;
 }
+
+input[type=button]{
+    padding: 5px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    color:white;
+    appearance: none;
+    transition: background-color 150ms ease-in-out;
+    border: 2px solid transparent;
+}
+
+input[type=button]:hover, input[type=button]:focus{
+    background-color: whitesmoke;
+    color:rgba(84,110,122);
+}
+
 select:hover,select:focus{
     border: 2px solid rgba(0,0,0,0.1);
 }
@@ -326,3 +344,77 @@ select:hover,select:focus{
     margin-bottom: 15px;
 }
 
+
+.dataset-container-wrapper{
+    display: none;
+    position: fixed;
+    justify-content: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100vw;
+    height: 100vh;
+    z-index: 4000;
+    background-color: rgba(255,255,255,0.7);
+}
+
+.dataset-container-wrapper .close-button{
+    color:white;
+} 
+
+.dataset-container{
+    max-width:800px;
+    width:90vw;
+    margin-bottom: 5vh;
+    margin-top: 5vh;
+    border-radius: 5px;
+    min-height: 86%;
+    border:2px solid white;
+    background-color: rgba(84,110,122,0.8);
+}
+.dataset-header{
+    display:flex;
+}
+.dataset-title{
+    flex-grow: 2;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 18pt;
+}
+
+.dataset-container .close-button{
+    flex-grow: 1;
+    width:50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    color:white;
+    font-size: 20pt;
+    cursor: pointer;
+}
+
+.dataset-container .close-button:hover, .dataset-container .close-button:focus{
+    background-color: rgba(0,0,0,0.1);
+}
+
+.dataset-body{
+    padding: 10px;
+}
+.dataset-body a{
+    display: inline-block;
+    padding: 20px;
+    color:white;
+    text-decoration: none;
+    border: 1px solid white;
+    border-radius: 3px;
+    margin: 10px;
+}
+
+.dataset-body a:hover,.dataset-body a:focus{
+    background-color: white;
+    color:rgb(84,110,122);
+}
